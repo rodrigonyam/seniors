@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meals - Sunshine Group Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <h1>🏠 Sunshine Group Home</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="activities.html">Activities</a></li>
+                <li><a href="meals.html" class="active">Meals</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="emergency.html" class="emergency-btn">Emergency</a></li>
+            </ul>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>🍽️ Meal Schedule & Menus</h1>
+            <p>Delicious, nutritious meals served with care</p>
+        </section>
+
+        <section class="today-meals">
+            <h2>🌅 Today's Menu</h2>
+            <div class="meals-grid">
+                <div class="meal-card breakfast">
+                    <div class="meal-header">
+                        <div class="meal-icon">🌅</div>
+                        <div class="meal-info">
+                            <h3>Breakfast</h3>
+                            <div class="meal-time">7:30 AM</div>
+                        </div>
+                    </div>
+                    <div class="meal-content">
+                        <div class="main-dish">🥞 Pancakes with Maple Syrup</div>
+                        <div class="sides">
+                            <div class="side-item">🥓 Turkey Bacon</div>
+                            <div class="side-item">🍊 Fresh Orange Juice</div>
+                            <div class="side-item">☕ Coffee & Tea</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meal-card lunch current">
+                    <div class="meal-header">
+                        <div class="meal-icon">☀️</div>
+                        <div class="meal-info">
+                            <h3>Lunch</h3>
+                            <div class="meal-time">12:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="meal-content">
+                        <div class="main-dish">🍗 Roasted Chicken Breast</div>
+                        <div class="sides">
+                            <div class="side-item">🥔 Mashed Potatoes</div>
+                            <div class="side-item">🥕 Steamed Carrots</div>
+                            <div class="side-item">🥖 Dinner Roll</div>
+                            <div class="side-item">🍰 Apple Pie</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meal-card dinner">
+                    <div class="meal-header">
+                        <div class="meal-icon">🌆</div>
+                        <div class="meal-info">
+                            <h3>Dinner</h3>
+                            <div class="meal-time">5:30 PM</div>
+                        </div>
+                    </div>
+                    <div class="meal-content">
+                        <div class="main-dish">🐟 Baked Salmon</div>
+                        <div class="sides">
+                            <div class="side-item">🍚 Wild Rice Pilaf</div>
+                            <div class="side-item">🥦 Steamed Broccoli</div>
+                            <div class="side-item">🥗 Garden Salad</div>
+                            <div class="side-item">🍫 Chocolate Pudding</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="meal-card snack">
+                    <div class="meal-header">
+                        <div class="meal-icon">🌙</div>
+                        <div class="meal-info">
+                            <h3>Evening Snack</h3>
+                            <div class="meal-time">8:00 PM</div>
+                        </div>
+                    </div>
+                    <div class="meal-content">
+                        <div class="main-dish">🍪 Fresh Baked Cookies</div>
+                        <div class="sides">
+                            <div class="side-item">🥛 Warm Milk</div>
+                            <div class="side-item">🍎 Fresh Fruit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="weekly-menu">
+            <h2>📅 This Week's Menu</h2>
+            <div class="week-selector">
+                <button class="week-btn active" onclick="showWeek('current')">This Week</button>
+                <button class="week-btn" onclick="showWeek('next')">Next Week</button>
+            </div>
+            
+            <div class="weekly-grid" id="current-week">
+                <div class="day-menu">
+                    <h3>Monday</h3>
+                    <div class="daily-meals">
+                        <div class="mini-meal">🥞 Pancakes</div>
+                        <div class="mini-meal">🍗 Chicken Soup</div>
+                        <div class="mini-meal">🍝 Spaghetti & Meatballs</div>
+                    </div>
+                </div>
+
+                <div class="day-menu">
+                    <h3>Tuesday</h3>
+                    <div class="daily-meals">
+                        <div class="mini-meal">🍳 Scrambled Eggs</div>
+                        <div class="mini-meal">🥪 Grilled Cheese</div>
+                        <div class="mini-meal">🥩 Beef Stew</div>
+                    </div>
+                </div>
+
+                <div class="day-menu today">
+                    <h3>Wednesday</h3>
+                    <div class="daily-meals">
+                        <div class="mini-meal">🥞 Pancakes</div>
+                        <div class="mini-meal">🍗 Roasted Chicken</div>
+                        <div class="mini-meal">🐟 Baked Salmon</div>
+                    </div>
+                </div>
+
+                <div class="day-menu">
+                    <h3>Thursday</h3>
+                    <div class="daily-meals">
+                        <div class="mini-meal">🍞 French Toast</div>
+                        <div class="mini-meal">🌮 Taco Day</div>
+                        <div class="mini-meal">🍖 Pork Chops</div>
+                    </div>
+                </div>
+
+                <div class="day-menu">
+                    <h3>Friday</h3>
+                    <div class="daily-meals">
+                        <div class="mini-meal">🥓 Bacon & Eggs</div>
+                        <div class="mini-meal">🍕 Pizza Party</div>
+                        <div class="mini-meal">🦐 Shrimp Scampi</div>
+                    </div>
+                </div>
+
+                <div class="day-menu weekend">
+                    <h3>Weekend</h3>
+                    <div class="daily-meals">
+                        <div class="mini-meal">🥐 Brunch Buffet</div>
+                        <div class="mini-meal">🍔 BBQ Special</div>
+                        <div class="mini-meal">🍰 Dessert Night</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="dietary-info">
+            <h2>🏥 Dietary Accommodations</h2>
+            <div class="dietary-grid">
+                <div class="dietary-card">
+                    <div class="dietary-icon">💚</div>
+                    <h3>Special Diets</h3>
+                    <ul>
+                        <li>Low Sodium</li>
+                        <li>Diabetic Friendly</li>
+                        <li>Heart Healthy</li>
+                        <li>Vegetarian Options</li>
+                    </ul>
+                </div>
+
+                <div class="dietary-card">
+                    <div class="dietary-icon">🥤</div>
+                    <h3>Beverages</h3>
+                    <ul>
+                        <li>Coffee & Tea (Always Available)</li>
+                        <li>Fresh Juices</li>
+                        <li>Water with Meals</li>
+                        <li>Milk & Alternatives</li>
+                    </ul>
+                </div>
+
+                <div class="dietary-card">
+                    <div class="dietary-icon">🍎</div>
+                    <h3>Snacks Available</h3>
+                    <ul>
+                        <li>Fresh Fruit</li>
+                        <li>Crackers & Cheese</li>
+                        <li>Yogurt</li>
+                        <li>Nuts & Seeds</li>
+                    </ul>
+                </div>
+
+                <div class="dietary-card">
+                    <div class="dietary-icon">👨‍🍳</div>
+                    <h3>Special Requests</h3>
+                    <ul>
+                        <li>Birthday Celebrations</li>
+                        <li>Comfort Food Options</li>
+                        <li>Cultural Preferences</li>
+                        <li>Texture Modifications</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="meal-preferences">
+            <div class="preferences-card">
+                <h2>🍽️ Meal Preferences</h2>
+                <p>We want every meal to be enjoyable for you! Let us know about any food preferences, allergies, or special dietary needs.</p>
+                <div class="preferences-buttons">
+                    <button class="big-button" onclick="reportAllergy()">
+                        <span class="icon">⚠️</span>
+                        Report Allergy
+                    </button>
+                    <button class="big-button" onclick="requestMeal()">
+                        <span class="icon">🍽️</span>
+                        Request Favorite Meal
+                    </button>
+                    <button class="big-button" onclick="viewNutrition()">
+                        <span class="icon">📊</span>
+                        Nutrition Info
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Sunshine Group Home. Caring for our community.</p>
+            <div class="emergency-info">
+                <p><strong>Emergency:</strong> Press the red Emergency button above or call extension 911</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function showWeek(week) {
+            const buttons = document.querySelectorAll('.week-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // In a real app, you'd load different menu data
+            if (week === 'next') {
+                // Show next week's menu
+                announceToScreenReader('Showing next week menu');
+            } else {
+                announceToScreenReader('Showing current week menu');
+            }
+        }
+
+        function reportAllergy() {
+            showModal('Report Food Allergy ⚠️', `
+                <div style="text-align: center;">
+                    <div style="background: #fff5f5; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <p style="font-size: 20px; color: #e74c3c; font-weight: 600;">
+                            Important: Food allergies and dietary restrictions
+                        </p>
+                        <p style="font-size: 18px; color: #2c3e50; margin: 15px 0;">
+                            Please inform our kitchen staff immediately about any food allergies or dietary restrictions.
+                        </p>
+                        <p style="font-size: 18px; color: #7f8c8d;">
+                            Speak with the head nurse or kitchen manager to ensure your safety and comfort during meals.
+                        </p>
+                    </div>
+                    <div style="font-size: 16px; color: #2c3e50;">
+                        <strong>Contact:</strong> Kitchen Manager - Extension 205<br>
+                        <strong>Or:</strong> Head Nurse - Extension 201
+                    </div>
+                </div>
+            `);
+        }
+
+        function requestMeal() {
+            showModal('Request Your Favorite Meal 🍽️', `
+                <div style="text-align: center;">
+                    <p style="font-size: 24px; margin: 20px 0;">Have a favorite dish you'd love to see on the menu?</p>
+                    <p style="font-size: 20px; color: #7f8c8d; margin: 20px 0;">
+                        Our kitchen staff loves to prepare residents' favorite meals!
+                    </p>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <p style="font-size: 18px; color: #2c3e50; margin-bottom: 15px;">
+                            <strong>How to request:</strong>
+                        </p>
+                        <div style="text-align: left; font-size: 16px; color: #2c3e50;">
+                            • Talk to any dining room staff member<br>
+                            • Write a note for the kitchen manager<br>
+                            • Ask during your next meal<br>
+                            • Mention it to your nurse
+                        </div>
+                    </div>
+                    <p style="font-size: 16px; color: #7f8c8d;">
+                        We try to accommodate special requests for birthdays and special occasions!
+                    </p>
+                </div>
+            `);
+        }
+
+        function viewNutrition() {
+            showModal('Nutritional Information 📊', `
+                <div style="text-align: center;">
+                    <p style="font-size: 24px; margin: 20px 0;">Our meals are designed with your health in mind</p>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 24px; margin-bottom: 10px;">💚</div>
+                            <div style="font-weight: 600;">Heart Healthy</div>
+                            <div style="font-size: 14px; color: #666;">Low sodium options</div>
+                        </div>
+                        <div style="background: #e8f4fd; padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 24px; margin-bottom: 10px;">🍎</div>
+                            <div style="font-weight: 600;">Balanced Nutrition</div>
+                            <div style="font-size: 14px; color: #666;">All food groups</div>
+                        </div>
+                        <div style="background: #fef4e8; padding: 15px; border-radius: 10px;">
+                            <div style="font-size: 24px; margin-bottom: 10px;">🥗</div>
+                            <div style="font-weight: 600;">Fresh Ingredients</div>
+                            <div style="font-size: 14px; color: #666;">Locally sourced</div>
+                        </div>
+                    </div>
+                    <p style="font-size: 18px; color: #7f8c8d; margin: 20px 0;">
+                        Detailed nutrition facts are available upon request from the kitchen staff.
+                    </p>
+                </div>
+            `);
+        }
+    </script>
+
+    <style>
+        .page-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+
+        .meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .meal-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 3px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .meal-card.current {
+            border-color: #e74c3c;
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.2);
+        }
+
+        .meal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .meal-header {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .meal-icon {
+            font-size: 32px;
+        }
+
+        .meal-info h3 {
+            font-size: 24px;
+            margin: 0 0 5px 0;
+        }
+
+        .meal-time {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .meal-content {
+            padding: 20px;
+        }
+
+        .main-dish {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .sides {
+            display: grid;
+            gap: 8px;
+        }
+
+        .side-item {
+            font-size: 16px;
+            color: #7f8c8d;
+            padding: 8px 0;
+        }
+
+        .week-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .week-btn {
+            background: white;
+            border: 2px solid #3498db;
+            color: #3498db;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .week-btn.active,
+        .week-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .day-menu {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            border: 3px solid #e9ecef;
+        }
+
+        .day-menu.today {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .day-menu.weekend {
+            border-color: #f39c12;
+            background: #fffbf5;
+        }
+
+        .day-menu h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .mini-meal {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 8px 0;
+            font-size: 16px;
+            color: #2c3e50;
+        }
+
+        .dietary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .dietary-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .dietary-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .dietary-card h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .dietary-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .dietary-card li {
+            padding: 8px 0;
+            font-size: 18px;
+            color: #7f8c8d;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .dietary-card li:last-child {
+            border-bottom: none;
+        }
+
+        .preferences-card {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .preferences-card h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .preferences-card p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .preferences-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .meals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .weekly-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .dietary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .preferences-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .week-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</body>
+</html>

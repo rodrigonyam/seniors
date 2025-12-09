@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sunshine Group Home - Welcome</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <h1>🏠 Sunshine Group Home</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="activities.html">Activities</a></li>
+                <li><a href="meals.html">Meals</a></li>
+                <li><a href="news.html">News</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="emergency.html" class="emergency-btn">Emergency</a></li>
+            </ul>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Welcome to Your Home</h2>
+                <p class="hero-text">Stay connected with activities, meals, and important information</p>
+                <div class="quick-actions">
+                    <button class="big-button" onclick="showTime()">
+                        <span class="icon">🕒</span>
+                        Current Time
+                    </button>
+                    <button class="big-button" onclick="showWeather()">
+                        <span class="icon">🌤️</span>
+                        Today's Weather
+                    </button>
+                    <button class="big-button" onclick="window.location.href='activities.html'">
+                        <span class="icon">🎯</span>
+                        Today's Activities
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard">
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>🍽️ Next Meal</h3>
+                    <div id="next-meal" class="info-display">
+                        <p class="meal-time">Loading...</p>
+                        <p class="meal-name"></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📅 Today's Date</h3>
+                    <div id="current-date" class="info-display">
+                        <p class="date-display"></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🎪 Upcoming Activity</h3>
+                    <div id="next-activity" class="info-display">
+                        <p class="activity-time">2:00 PM</p>
+                        <p class="activity-name">Bingo in the Main Hall</p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📢 Important Notice</h3>
+                    <div class="info-display">
+                        <p class="notice-text">Family visiting hours: 2-5 PM daily</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-links">
+            <h2>Quick Links</h2>
+            <div class="links-grid">
+                <a href="activities.html" class="link-card">
+                    <span class="link-icon">🎮</span>
+                    <span class="link-text">Activities & Games</span>
+                </a>
+                <a href="meals.html" class="link-card">
+                    <span class="link-icon">🍽️</span>
+                    <span class="link-text">Meal Schedule</span>
+                </a>
+                <a href="news.html" class="link-card">
+                    <span class="link-icon">📰</span>
+                    <span class="link-text">News & Updates</span>
+                </a>
+                <a href="contact.html" class="link-card">
+                    <span class="link-icon">📞</span>
+                    <span class="link-text">Contact Staff</span>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Sunshine Group Home. Caring for our community.</p>
+            <div class="emergency-info">
+                <p><strong>Emergency:</strong> Press the red Emergency button above or call extension 911</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

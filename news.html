@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Updates - Sunshine Group Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="main-nav">
+            <div class="logo">
+                <h1>🏠 Sunshine Group Home</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="activities.html">Activities</a></li>
+                <li><a href="meals.html">Meals</a></li>
+                <li><a href="news.html" class="active">News</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="emergency.html" class="emergency-btn">Emergency</a></li>
+            </ul>
+            <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <h1>📰 News & Updates</h1>
+            <p>Stay informed about what's happening in our community</p>
+        </section>
+
+        <section class="breaking-news">
+            <div class="news-alert">
+                <div class="alert-icon">🎉</div>
+                <div class="alert-content">
+                    <h2>Special Announcement</h2>
+                    <p>Family picnic this Saturday in the garden! Weather permitting - 2:00 PM to 5:00 PM</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="recent-news">
+            <h2>📅 Recent Updates</h2>
+            <div class="news-grid">
+                <article class="news-card featured">
+                    <div class="news-date">Today</div>
+                    <h3>🌟 New Activity Room Opens</h3>
+                    <p>We're excited to announce the opening of our renovated activity room! It features new exercise equipment, comfortable seating, and better lighting. Come check it out after lunch today!</p>
+                    <div class="news-tags">
+                        <span class="tag">Activities</span>
+                        <span class="tag">Facilities</span>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-date">Yesterday</div>
+                    <h3>👩‍⚕️ Meet Our New Nurse</h3>
+                    <p>Please join us in welcoming Sarah Johnson, RN, to our nursing team. Sarah brings 15 years of experience in senior care and specializes in diabetes management.</p>
+                    <div class="news-tags">
+                        <span class="tag">Staff</span>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-date">Dec 6</div>
+                    <h3>🎄 Holiday Decorating Day</h3>
+                    <p>Join us this Friday at 2:00 PM to help decorate the common areas for the holidays. Hot chocolate and cookies will be served!</p>
+                    <div class="news-tags">
+                        <span class="tag">Events</span>
+                        <span class="tag">Holidays</span>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-date">Dec 5</div>
+                    <h3>🚌 Transportation Schedule Update</h3>
+                    <p>New shopping trips to the mall every Wednesday at 10:00 AM. Sign up at the front desk if you'd like to join!</p>
+                    <div class="news-tags">
+                        <span class="tag">Transportation</span>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-date">Dec 3</div>
+                    <h3>🎵 Monthly Birthday Celebration</h3>
+                    <p>December birthday party will be held this Sunday at 3:00 PM in the main dining room. Cake and ice cream for everyone!</p>
+                    <div class="news-tags">
+                        <span class="tag">Celebrations</span>
+                    </div>
+                </article>
+
+                <article class="news-card">
+                    <div class="news-date">Dec 1</div>
+                    <h3>📚 New Books in Library</h3>
+                    <p>The library has received 20 new large-print books, including mysteries, romances, and biographies. Check them out at the front desk!</p>
+                    <div class="news-tags">
+                        <span class="tag">Library</span>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="upcoming-events">
+            <h2>📆 Upcoming This Month</h2>
+            <div class="events-timeline">
+                <div class="event-item">
+                    <div class="event-date">Dec 15</div>
+                    <div class="event-content">
+                        <h4>🎭 Holiday Concert</h4>
+                        <p>Local choir performance at 7:00 PM</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">Dec 20</div>
+                    <div class="event-content">
+                        <h4>🍪 Cookie Baking Day</h4>
+                        <p>Bake holiday cookies with the kitchen staff</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">Dec 24</div>
+                    <div class="event-content">
+                        <h4>🎄 Christmas Eve Service</h4>
+                        <p>Optional evening service in the chapel</p>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">Dec 31</div>
+                    <div class="event-content">
+                        <h4>🎊 New Year's Eve Party</h4>
+                        <p>Celebration starts at 8:00 PM</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="weather-wellness">
+            <div class="info-cards">
+                <div class="info-card weather-card">
+                    <h3>🌤️ This Week's Weather</h3>
+                    <div class="weather-forecast">
+                        <div class="day-weather">
+                            <span class="day">Wed</span>
+                            <span class="weather-icon">☀️</span>
+                            <span class="temp">72°F</span>
+                        </div>
+                        <div class="day-weather">
+                            <span class="day">Thu</span>
+                            <span class="weather-icon">⛅</span>
+                            <span class="temp">68°F</span>
+                        </div>
+                        <div class="day-weather">
+                            <span class="day">Fri</span>
+                            <span class="weather-icon">🌧️</span>
+                            <span class="temp">65°F</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card wellness-card">
+                    <h3>💊 Health Reminders</h3>
+                    <ul>
+                        <li>Flu shots available - see the nurse</li>
+                        <li>Stay hydrated in winter weather</li>
+                        <li>Exercise classes help maintain strength</li>
+                        <li>Report any symptoms early</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Sunshine Group Home. Caring for our community.</p>
+            <div class="emergency-info">
+                <p><strong>Emergency:</strong> Press the red Emergency button above or call extension 911</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <style>
+        .page-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 40px;
+        }
+
+        .breaking-news {
+            margin-bottom: 50px;
+        }
+
+        .news-alert {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        .alert-icon {
+            font-size: 48px;
+        }
+
+        .alert-content h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .alert-content p {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .news-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 5px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .news-card.featured {
+            border-left-color: #e74c3c;
+            background: linear-gradient(135deg, #fff5f5, #ffffff);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .news-date {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .news-card.featured .news-date {
+            background: #e74c3c;
+        }
+
+        .news-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .news-card p {
+            font-size: 18px;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .news-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #f8f9fa;
+            color: #2c3e50;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .events-timeline {
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+            background: white;
+            border-radius: 0 10px 10px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .event-date {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .event-content h4 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+
+        .event-content p {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin: 0;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .info-card h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .weather-forecast {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .day-weather {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            flex: 1;
+        }
+
+        .day-weather .day {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .day-weather .weather-icon {
+            display: block;
+            font-size: 24px;
+            margin: 8px 0;
+        }
+
+        .day-weather .temp {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        .wellness-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .wellness-card li {
+            padding: 12px 0;
+            font-size: 18px;
+            color: #7f8c8d;
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .wellness-card li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .wellness-card li:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .news-alert {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .event-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .weather-forecast {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>
