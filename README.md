@@ -1,15 +1,42 @@
-# Sunshine Group Home Website
+# 🏠 Senior Group Home Website
 
-A senior-friendly website designed specifically for group home residents with large text, simple navigation, and accessibility features.
+A comprehensive, accessible website designed specifically for seniors living in group homes. This website prioritizes ease of use, accessibility, and essential care features to support senior residents in their daily lives.
 
-## Features
+## 🎯 **Features Overview**
 
-### 🌟 Accessibility-First Design
-- **Large Text**: Default 20px font size with options for larger text
-- **High Contrast Mode**: Toggle for better visibility
-- **Keyboard Navigation**: Full keyboard support with visible focus indicators
-- **Screen Reader Support**: Proper ARIA labels and announcements
-- **Simple Layout**: Clean, uncluttered design with plenty of white space
+### **📱 Core Accessibility**
+- **Large, High-Contrast Design** - Easy to read text and buttons
+- **Voice Interaction** - 20+ voice commands for hands-free operation
+- **Screen Reader Support** - Full ARIA compliance and keyboard navigation
+- **Touch-Friendly Interface** - Large buttons suitable for all dexterity levels
+- **Text-to-Speech** - Reads content aloud for vision-impaired users
+
+### **🏥 Health & Safety**
+- **Medication Reminders** - Visual and audio alerts with snooze options
+- **Emergency Alerts** - One-click emergency button with staff notification
+- **Meal Time Notifications** - Breakfast, lunch, and dinner reminders
+- **Health Tracking** - Simple interfaces for basic health monitoring
+- **Offline Emergency System** - Works even without internet connection
+
+### **👥 Community Building**
+- **Activity Participation** - Easy sign-up for group activities
+- **Social Features** - Encourage interaction and reduce isolation
+- **Special Events** - Weekly beach days, donation drives, and pet visits
+- **Community Board** - Share updates and connect with fellow residents
+
+### **👨‍👩‍👧‍👦 Family Connection**
+- **Video Calling** - Simple interface for family video calls
+- **Photo Sharing** - Easy photo upload and viewing system
+- **Family Contacts** - Organized contact management with large buttons
+- **Group Messaging** - WhatsApp and Facebook Messenger integration
+- **Emergency Family Alerts** - Automatic family notification system
+
+### **🔄 Offline Functionality**
+- **Progressive Web App (PWA)** - Install like a native app
+- **Offline Reminders** - Medication and meal alerts work without internet
+- **Emergency Offline Mode** - Emergency button functions without connectivity
+- **Auto-Sync** - Data synchronizes when connection is restored
+- **Cached Content** - Essential pages accessible offline
 
 ### 📱 Pages Included
 
