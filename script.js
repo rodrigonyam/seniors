@@ -2042,3 +2042,530 @@ function groupVideoCall() {
 function requestVideoCallHelp() {
     showSuccessFeedback('Video call assistance requested - staff will provide step-by-step help!');
 }
+
+// Voice Interaction System
+let recognition = null;
+let synthesis = window.speechSynthesis;
+let isListening = false;
+let isSpeaking = false;
+let speechEnabled = true;
+let voiceCommands = {
+    'hello': () => speak('Hello! I\'m here to help. You can ask me to read the page, navigate to activities, or get help with anything.'),
+    'help': () => showVoiceCommands(),
+    'read page': () => readPageContent(),
+    'activities': () => window.location.href = 'activities.html',
+    'meals': () => window.location.href = 'meals.html',
+    'schedule': () => window.location.href = 'schedule.html',
+    'community': () => window.location.href = 'community.html',
+    'games': () => window.location.href = 'games.html',
+    'home': () => window.location.href = 'index.html',
+    'medication': () => showMedicationReminder(),
+    'health': () => showHealthTracker(),
+    'family': () => showFamilyConnector(),
+    'emergency': () => alertStaff(),
+    'stop reading': () => stopSpeaking(),
+    'pause': () => pauseAllSpeech(),
+    'resume': () => resumeSpeaking(),
+    'louder': () => increaseSpeechVolume(),
+    'quieter': () => decreaseSpeechVolume(),
+    'slower': () => decreaseSpeechRate(),
+    'faster': () => increaseSpeechRate(),
+    'repeat': () => repeatLastSpeech()
+};
+
+// Initialize Voice Recognition
+function initializeVoiceRecognition() {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onstart = function() {
+            isListening = true;
+            updateVoiceStatus('🎤 Listening... Speak your command', 'listening');
+        };
+        
+        recognition.onresult = function(event) {
+            const command = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+            updateVoiceStatus(`🗣️ You said: "${command}"`, 'processing');
+            processVoiceCommand(command);
+        };
+        
+        recognition.onerror = function(event) {
+            updateVoiceStatus('❌ Voice recognition error. Please try again.', 'error');
+            setTimeout(() => updateVoiceStatus('🔇 Voice assistance ready - Click microphone or say "Hello"', 'ready'), 3000);
+        };
+        
+        recognition.onend = function() {
+            isListening = false;
+            if (document.getElementById('micToggle').classList.contains('active')) {
+                setTimeout(startVoiceRecognition, 1000);
+            } else {
+                updateVoiceStatus('🔇 Voice assistance ready - Click microphone or say "Hello"', 'ready');
+            }
+        };
+        
+        // Auto-start voice recognition
+        startVoiceRecognition();
+        speak('Voice assistance activated. Say "help" to learn voice commands, or click anywhere to begin.');
+    } else {
+        updateVoiceStatus('❌ Voice recognition not supported in this browser', 'error');
+    }
+}
+
+// Voice Command Processing
+function processVoiceCommand(command) {
+    // Find matching command
+    const matchedCommand = Object.keys(voiceCommands).find(cmd => 
+        command.includes(cmd) || cmd.includes(command)
+    );
+    
+    if (matchedCommand) {
+        speak(`Executing ${matchedCommand}`);
+        voiceCommands[matchedCommand]();
+        updateVoiceStatus(`✅ Executed: ${matchedCommand}`, 'success');
+    } else {
+        speak('Sorry, I didn\'t understand that command. Say "help" to see available commands.');
+        updateVoiceStatus('❓ Command not recognized. Say "help" for commands.', 'error');
+    }
+    
+    setTimeout(() => {
+        if (isListening) {
+            updateVoiceStatus('🎤 Listening for next command...', 'listening');
+        }
+    }, 2000);
+}
+
+// Text-to-Speech Functions
+function speak(text, priority = false) {
+    if (!speechEnabled) return;
+    
+    if (priority) {
+        synthesis.cancel();
+    }
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = parseFloat(localStorage.getItem('speechRate') || '0.8');
+    utterance.pitch = parseFloat(localStorage.getItem('speechPitch') || '1.0');
+    utterance.volume = parseFloat(localStorage.getItem('speechVolume') || '0.9');
+    
+    // Use a clear, friendly voice if available
+    const voices = synthesis.getVoices();
+    const preferredVoice = voices.find(voice => 
+        voice.name.includes('Google') || 
+        voice.name.includes('Microsoft') || 
+        voice.lang.includes('en')
+    );
+    if (preferredVoice) {
+        utterance.voice = preferredVoice;
+    }
+    
+    utterance.onstart = () => {
+        isSpeaking = true;
+        document.getElementById('speakerToggle').classList.add('active');
+    };
+    
+    utterance.onend = () => {
+        isSpeaking = false;
+        document.getElementById('speakerToggle').classList.remove('active');
+    };
+    
+    synthesis.speak(utterance);
+}
+
+// Voice Control Functions
+function startVoiceRecognition() {
+    if (recognition && !isListening) {
+        recognition.start();
+        document.getElementById('micToggle').classList.add('active');
+    } else if (!recognition) {
+        initializeVoiceRecognition();
+    }
+}
+
+function stopVoiceRecognition() {
+    if (recognition && isListening) {
+        recognition.stop();
+        document.getElementById('micToggle').classList.remove('active');
+        updateVoiceStatus('🔇 Voice recognition stopped', 'ready');
+    }
+}
+
+function toggleMicrophone() {
+    if (isListening) {
+        stopVoiceRecognition();
+        speak('Voice recognition turned off');
+    } else {
+        startVoiceRecognition();
+    }
+}
+
+function toggleSpeaker() {
+    speechEnabled = !speechEnabled;
+    const speakerBtn = document.getElementById('speakerToggle');
+    
+    if (speechEnabled) {
+        speakerBtn.classList.add('active');
+        speak('Text-to-speech enabled');
+        updateVoiceStatus('🔊 Text-to-speech enabled', 'ready');
+    } else {
+        synthesis.cancel();
+        speakerBtn.classList.remove('active');
+        updateVoiceStatus('🔇 Text-to-speech disabled', 'ready');
+    }
+}
+
+function pauseAllSpeech() {
+    if (synthesis.speaking) {
+        synthesis.pause();
+        updateVoiceStatus('⏸️ Speech paused - Click resume or say "resume"', 'paused');
+    }
+}
+
+function resumeSpeaking() {
+    if (synthesis.paused) {
+        synthesis.resume();
+        updateVoiceStatus('▶️ Speech resumed', 'ready');
+    }
+}
+
+function stopSpeaking() {
+    synthesis.cancel();
+    updateVoiceStatus('⏹️ Speech stopped', 'ready');
+}
+
+// Content Reading Functions
+function readPageContent() {
+    const mainContent = document.querySelector('main');
+    if (mainContent) {
+        const textContent = extractReadableText(mainContent);
+        speak('Reading page content. Say "stop reading" or "pause" to control.', true);
+        setTimeout(() => speak(textContent), 2000);
+    }
+}
+
+function extractReadableText(element) {
+    let text = '';
+    const walker = document.createTreeWalker(
+        element,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode: function(node) {
+                const parent = node.parentElement;
+                if (parent.style.display === 'none' || 
+                    parent.hidden || 
+                    parent.classList.contains('sr-only')) {
+                    return NodeFilter.FILTER_REJECT;
+                }
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        }
+    );
+    
+    let node;
+    while (node = walker.nextNode()) {
+        const trimmedText = node.textContent.trim();
+        if (trimmedText && trimmedText.length > 2) {
+            text += trimmedText + ' ';
+        }
+    }
+    
+    return text.replace(/\s+/g, ' ').trim();
+}
+
+// Voice Command Display
+function showVoiceCommands() {
+    const commandsList = Object.keys(voiceCommands).map(cmd => {
+        const descriptions = {
+            'hello': 'Start conversation',
+            'help': 'Show this command list',
+            'read page': 'Read all content on current page',
+            'activities': 'Go to activities page',
+            'meals': 'Go to meals page',
+            'schedule': 'Go to schedule page', 
+            'community': 'Go to community page',
+            'games': 'Go to games page',
+            'home': 'Go to home page',
+            'medication': 'Show medication reminders',
+            'health': 'Open health tracker',
+            'family': 'Open family contacts',
+            'emergency': 'Alert staff immediately',
+            'stop reading': 'Stop text-to-speech',
+            'pause': 'Pause current speech',
+            'resume': 'Resume paused speech',
+            'louder': 'Increase speech volume',
+            'quieter': 'Decrease speech volume',
+            'slower': 'Slow down speech',
+            'faster': 'Speed up speech',
+            'repeat': 'Repeat last speech'
+        };
+        return `<strong>"${cmd}"</strong> - ${descriptions[cmd] || 'Execute command'}`;
+    }).join('<br>');
+    
+    showModal('🎤 Voice Commands', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🗣️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Available Voice Commands
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left; max-height: 400px; overflow-y: auto;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px; text-align: center;">📋 Say any of these commands:</h3>
+                <div style="font-size: 16px; line-height: 2; color: #2c3e50;">
+                    ${commandsList}
+                </div>
+            </div>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 18px; color: #2e7d32; margin: 0; font-weight: 600;">
+                    💡 Tip: Speak clearly and wait for the beep. Commands work even if the microphone button isn't pressed!
+                </p>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="testVoiceCommand()" style="
+                    background: #4caf50; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Test Voice Command</button>
+                <button onclick="adjustSpeechSettings()" style="
+                    background: #2196f3; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Speech Settings</button>
+            </div>
+        </div>
+    `);
+    
+    speak('Here are all available voice commands. You can say any of these at any time.');
+}
+
+// Speech Settings
+function adjustSpeechSettings() {
+    const currentRate = parseFloat(localStorage.getItem('speechRate') || '0.8');
+    const currentVolume = parseFloat(localStorage.getItem('speechVolume') || '0.9');
+    const currentPitch = parseFloat(localStorage.getItem('speechPitch') || '1.0');
+    
+    showModal('⚙️ Speech Settings', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🔊</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Customize Text-to-Speech
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 18px; color: #2c3e50; display: block; margin-bottom: 10px;"><strong>Speech Speed:</strong></label>
+                    <input type="range" id="speechRate" min="0.3" max="1.5" step="0.1" value="${currentRate}" 
+                           onchange="updateSpeechRate(this.value)" 
+                           style="width: 100%; height: 8px; border-radius: 5px; background: #ddd;">
+                    <div style="display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-top: 5px;">
+                        <span>Slower</span><span>Normal</span><span>Faster</span>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 18px; color: #2c3e50; display: block; margin-bottom: 10px;"><strong>Volume Level:</strong></label>
+                    <input type="range" id="speechVolume" min="0.2" max="1.0" step="0.1" value="${currentVolume}" 
+                           onchange="updateSpeechVolume(this.value)" 
+                           style="width: 100%; height: 8px; border-radius: 5px; background: #ddd;">
+                    <div style="display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-top: 5px;">
+                        <span>Quiet</span><span>Medium</span><span>Loud</span>
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 18px; color: #2c3e50; display: block; margin-bottom: 10px;"><strong>Voice Pitch:</strong></label>
+                    <input type="range" id="speechPitch" min="0.8" max="1.2" step="0.1" value="${currentPitch}" 
+                           onchange="updateSpeechPitch(this.value)" 
+                           style="width: 100%; height: 8px; border-radius: 5px; background: #ddd;">
+                    <div style="display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-top: 5px;">
+                        <span>Lower</span><span>Normal</span><span>Higher</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="testSpeechSettings()" style="
+                    background: #4caf50; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Test Speech</button>
+                <button onclick="resetSpeechSettings()" style="
+                    background: #ff9800; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Reset to Default</button>
+            </div>
+        </div>
+    `);
+}
+
+// Speech Setting Updaters
+function updateSpeechRate(value) {
+    localStorage.setItem('speechRate', value);
+}
+
+function updateSpeechVolume(value) {
+    localStorage.setItem('speechVolume', value);
+}
+
+function updateSpeechPitch(value) {
+    localStorage.setItem('speechPitch', value);
+}
+
+function testSpeechSettings() {
+    speak('This is a test of your speech settings. The voice should sound clear and comfortable.', true);
+}
+
+function resetSpeechSettings() {
+    localStorage.setItem('speechRate', '0.8');
+    localStorage.setItem('speechVolume', '0.9');
+    localStorage.setItem('speechPitch', '1.0');
+    document.getElementById('speechRate').value = 0.8;
+    document.getElementById('speechVolume').value = 0.9;
+    document.getElementById('speechPitch').value = 1.0;
+    speak('Speech settings reset to default values.');
+}
+
+// Accessibility Functions
+function enableHighContrast() {
+    document.body.classList.toggle('high-contrast');
+    const isEnabled = document.body.classList.contains('high-contrast');
+    speak(isEnabled ? 'High contrast mode enabled' : 'High contrast mode disabled');
+    localStorage.setItem('highContrast', isEnabled);
+}
+
+function increaseFontSize() {
+    const currentSize = parseInt(localStorage.getItem('fontSize') || '100');
+    const newSize = Math.min(currentSize + 20, 200);
+    document.documentElement.style.fontSize = newSize + '%';
+    localStorage.setItem('fontSize', newSize);
+    speak(`Font size increased to ${newSize} percent`);
+}
+
+function enableScreenReader() {
+    speak('Screen reader mode activated. All clickable elements will be announced when you navigate with Tab key.');
+    document.body.classList.add('screen-reader-mode');
+    addScreenReaderSupport();
+}
+
+// Utility Functions
+function updateVoiceStatus(message, status) {
+    const statusElement = document.getElementById('voiceStatus');
+    if (statusElement) {
+        const iconMap = {
+            'listening': '🎤',
+            'processing': '🔄',
+            'success': '✅',
+            'error': '❌',
+            'ready': '🔇',
+            'paused': '⏸️'
+        };
+        
+        statusElement.innerHTML = `
+            <span class="status-icon">${iconMap[status] || '🔇'}</span>
+            <span class="status-text">${message}</span>
+        `;
+        
+        statusElement.className = `status-indicator ${status}`;
+    }
+}
+
+function testVoiceCommand() {
+    speak('Say "hello" to test voice recognition, or try "read page" to have this content read aloud.');
+    setTimeout(startVoiceRecognition, 3000);
+}
+
+function addScreenReaderSupport() {
+    // Add focus indicators and announcements
+    const clickableElements = document.querySelectorAll('button, a, [onclick], input, select, textarea');
+    clickableElements.forEach(element => {
+        element.addEventListener('focus', () => {
+            const text = element.textContent || element.value || element.title || element.alt || 'Interactive element';
+            speak(`Focused on: ${text}`);
+        });
+    });
+}
+
+function toggleVoiceHelp() {
+    showModal('❓ Voice Help', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🎤</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Voice Assistance Help
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">🗣️ How to Use Voice Commands:</h3>
+                <ul style="font-size: 18px; line-height: 2; color: #2c3e50; text-align: left;">
+                    <li><strong>Activate:</strong> Click the microphone button or say "Hello"</li>
+                    <li><strong>Navigate:</strong> Say "activities", "meals", "schedule", etc.</li>
+                    <li><strong>Get Help:</strong> Say "help" or "emergency" for immediate assistance</li>
+                    <li><strong>Control Reading:</strong> Say "read page", "pause", "stop reading"</li>
+                    <li><strong>Adjust Speech:</strong> Say "louder", "slower", "faster", "repeat"</li>
+                </ul>
+                
+                <h3 style="color: #1976d2; margin: 20px 0 15px 0;">🔊 Text-to-Speech Features:</h3>
+                <ul style="font-size: 18px; line-height: 2; color: #2c3e50; text-align: left;">
+                    <li>Any text can be read aloud automatically</li>
+                    <li>Adjustable speed, volume, and voice pitch</li>
+                    <li>Pause and resume at any time</li>
+                    <li>High-quality, clear voice synthesis</li>
+                </ul>
+            </div>
+            
+            <div style="background: #fff3e0; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 16px; color: #ef6c00; margin: 0;">
+                    💡 <strong>Pro Tip:</strong> Voice commands work continuously - you don't need to press buttons every time!
+                </p>
+            </div>
+            
+            <button onclick="startVoiceRecognition()" style="
+                background: #4caf50; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+            ">Start Voice Control Now</button>
+        </div>
+    `);
+    
+    speak('Voice help is displayed. Voice commands are always active when the microphone is on.');
+}
+
+// Initialize voice system when page loads
+window.addEventListener('load', function() {
+    // Load saved accessibility settings
+    if (localStorage.getItem('highContrast') === 'true') {
+        document.body.classList.add('high-contrast');
+    }
+    
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (savedFontSize) {
+        document.documentElement.style.fontSize = savedFontSize + '%';
+    }
+    
+    // Initialize voice recognition after a short delay
+    setTimeout(initializeVoiceRecognition, 2000);
+    
+    // Add keyboard shortcuts for accessibility
+    document.addEventListener('keydown', function(e) {
+        if (e.altKey) {
+            switch(e.key) {
+                case 'v':
+                    e.preventDefault();
+                    toggleMicrophone();
+                    break;
+                case 's':
+                    e.preventDefault();
+                    toggleSpeaker();
+                    break;
+                case 'r':
+                    e.preventDefault();
+                    readPageContent();
+                    break;
+                case 'h':
+                    e.preventDefault();
+                    showVoiceHelp();
+                    break;
+            }
+        }
+    });
+});

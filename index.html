@@ -309,6 +309,106 @@
                 </div>
             </div>
         </section>
+
+        <!-- Voice Interaction Section -->
+        <section class="voice-interaction">
+            <div class="voice-intro">
+                <h2>🎤 Voice Assistance</h2>
+                <p><strong>Hands-free interaction</strong> - Use your voice to navigate, read content, and get help when you need it most.</p>
+            </div>
+            
+            <div class="voice-categories">
+                <div class="voice-category voice-commands">
+                    <div class="category-header">
+                        <div class="category-icon">🎙️</div>
+                        <div class="category-title">
+                            <h3>Voice Commands</h3>
+                            <p>Control the website with simple voice commands</p>
+                        </div>
+                    </div>
+                    <div class="voice-tools">
+                        <div class="voice-tool" onclick="startVoiceRecognition()">
+                            <span class="tool-icon">🗣️</span>
+                            <p class="tool-name">Voice Control</p>
+                        </div>
+                        <div class="voice-tool" onclick="showVoiceCommands()">
+                            <span class="tool-icon">📝</span>
+                            <p class="tool-name">Command List</p>
+                        </div>
+                        <div class="voice-tool" onclick="toggleVoiceHelp()">
+                            <span class="tool-icon">❓</span>
+                            <p class="tool-name">Voice Help</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="voice-category text-speech">
+                    <div class="category-header">
+                        <div class="category-icon">🔊</div>
+                        <div class="category-title">
+                            <h3>Text-to-Speech</h3>
+                            <p>Have any text read aloud clearly</p>
+                        </div>
+                    </div>
+                    <div class="voice-tools">
+                        <div class="voice-tool" onclick="readPageContent()">
+                            <span class="tool-icon">📖</span>
+                            <p class="tool-name">Read Page</p>
+                        </div>
+                        <div class="voice-tool" onclick="adjustSpeechSettings()">
+                            <span class="tool-icon">⚙️</span>
+                            <p class="tool-name">Speech Settings</p>
+                        </div>
+                        <div class="voice-tool" onclick="pauseAllSpeech()">
+                            <span class="tool-icon">⏸️</span>
+                            <p class="tool-name">Pause/Resume</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="voice-category accessibility-voice">
+                    <div class="category-header">
+                        <div class="category-icon">♿</div>
+                        <div class="category-title">
+                            <h3>Accessibility Features</h3>
+                            <p>Enhanced support for vision and mobility needs</p>
+                        </div>
+                    </div>
+                    <div class="voice-tools">
+                        <div class="voice-tool" onclick="enableHighContrast()">
+                            <span class="tool-icon">🌓</span>
+                            <p class="tool-name">High Contrast</p>
+                        </div>
+                        <div class="voice-tool" onclick="increaseFontSize()">
+                            <span class="tool-icon">🔍</span>
+                            <p class="tool-name">Large Text</p>
+                        </div>
+                        <div class="voice-tool" onclick="enableScreenReader()">
+                            <span class="tool-icon">👁️</span>
+                            <p class="tool-name">Screen Reader</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="voice-status-bar">
+                <div class="status-indicator" id="voiceStatus">
+                    <span class="status-icon">🔇</span>
+                    <span class="status-text">Voice assistance ready - Click microphone or say "Hello"</span>
+                </div>
+                <div class="voice-controls">
+                    <button class="voice-control-btn" id="micToggle" onclick="toggleMicrophone()" title="Toggle Microphone">
+                        <span class="mic-icon">🎤</span>
+                    </button>
+                    <button class="voice-control-btn" id="speakerToggle" onclick="toggleSpeaker()" title="Toggle Speaker">
+                        <span class="speaker-icon">🔊</span>
+                    </button>
+                    <button class="voice-control-btn" id="helpToggle" onclick="showVoiceHelp()" title="Voice Help">
+                        <span class="help-icon">❓</span>
+                    </button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
