@@ -1374,3 +1374,671 @@ function connectWithSpecialBuddy(buddyName, activityName) {
     `);
     showSuccessFeedback(`Connected with ${buddyName} for ${activityName}!`);
 }
+
+// Practical Support Functions
+// Daily Routines Support
+function showMedicationReminder() {
+    const currentTime = new Date();
+    const medications = [
+        { name: 'Blood Pressure', time: '8:00 AM', taken: true },
+        { name: 'Vitamin D', time: '12:00 PM', taken: false, next: true },
+        { name: 'Heart Medication', time: '6:00 PM', taken: false },
+        { name: 'Sleep Aid', time: '9:00 PM', taken: false }
+    ];
+    
+    showModal('💊 Medication Reminder', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">💊</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Daily Medication Schedule
+            </p>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                ${medications.map(med => `
+                    <div style="
+                        background: ${med.taken ? '#e8f5e8' : med.next ? '#fff3e0' : 'white'};
+                        padding: 15px; margin: 10px 0; border-radius: 10px;
+                        border: 2px solid ${med.taken ? '#4caf50' : med.next ? '#ff9800' : '#ddd'};
+                        display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <div>
+                            <strong style="font-size: 18px; color: #2c3e50;">${med.name}</strong><br>
+                            <span style="color: #666; font-size: 16px;">${med.time}</span>
+                        </div>
+                        <div style="font-size: 24px;">
+                            ${med.taken ? '✅' : med.next ? '⏰' : '⭕'}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="background: ${medications.some(m => m.next) ? '#fff3e0' : '#e8f5e8'}; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 18px; color: ${medications.some(m => m.next) ? '#ef6c00' : '#2e7d32'}; margin: 0; font-weight: 600;">
+                    ${medications.some(m => m.next) ? '⏰ Next medication due soon! Staff will remind you.' : '✅ All current medications taken. Great job!'}
+                </p>
+            </div>
+            <button onclick="requestMedicationHelp()" style="
+                background: #2196f3; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                margin: 10px; box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            ">Need Help with Medications?</button>
+        </div>
+    `);
+    showSuccessFeedback('Medication schedule displayed!');
+}
+
+function showDailySchedule() {
+    const today = new Date();
+    const schedule = [
+        { time: '7:00 AM', activity: 'Wake Up & Personal Care', status: 'completed' },
+        { time: '8:00 AM', activity: 'Breakfast & Medications', status: 'completed' },
+        { time: '10:00 AM', activity: 'Morning Exercise', status: 'current' },
+        { time: '11:30 AM', activity: 'Free Time / Reading', status: 'upcoming' },
+        { time: '12:30 PM', activity: 'Lunch', status: 'upcoming' },
+        { time: '2:00 PM', activity: 'Bingo Activity', status: 'upcoming' },
+        { time: '4:00 PM', activity: 'Rest Time', status: 'upcoming' },
+        { time: '6:00 PM', activity: 'Dinner', status: 'upcoming' },
+        { time: '8:00 PM', activity: 'Evening Social Time', status: 'upcoming' }
+    ];
+    
+    showModal('🕐 Your Daily Schedule', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📅</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Today's Personal Schedule
+            </p>
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left; max-height: 400px; overflow-y: auto;">
+                ${schedule.map(item => `
+                    <div style="
+                        background: ${item.status === 'completed' ? '#e8f5e8' : item.status === 'current' ? '#fff8e1' : 'white'};
+                        padding: 15px; margin: 10px 0; border-radius: 10px;
+                        border: 3px solid ${item.status === 'completed' ? '#4caf50' : item.status === 'current' ? '#ff9800' : '#e0e0e0'};
+                        display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <div>
+                            <strong style="font-size: 18px; color: #2c3e50;">${item.time}</strong><br>
+                            <span style="color: #666; font-size: 16px;">${item.activity}</span>
+                        </div>
+                        <div style="font-size: 28px;">
+                            ${item.status === 'completed' ? '✅' : item.status === 'current' ? '👆' : '⏳'}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="background: #e3f2fd; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 18px; color: #1976d2; margin: 0; font-weight: 600;">
+                    📍 Current Activity: ${schedule.find(s => s.status === 'current')?.activity || 'Free Time'}
+                </p>
+            </div>
+            <button onclick="customizeSchedule()" style="
+                background: #4caf50; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                margin: 5px; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            ">Customize Schedule</button>
+        </div>
+    `);
+    showSuccessFeedback('Daily schedule loaded!');
+}
+
+function showMealPlanner() {
+    const mealPreferences = {
+        dietary: ['Low Sodium', 'Diabetic Friendly'],
+        allergies: ['Nuts'],
+        preferences: ['Extra Vegetables', 'Soft Foods']
+    };
+    
+    showModal('🍽️ Meal Planning Helper', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🍽️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Personalized Meal Plan
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Your Dietary Profile:</h3>
+                <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                    <strong>Dietary Needs:</strong> ${mealPreferences.dietary.join(', ')}
+                </div>
+                <div style="background: #ffebee; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                    <strong>Allergies:</strong> ${mealPreferences.allergies.join(', ')}
+                </div>
+                <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                    <strong>Preferences:</strong> ${mealPreferences.preferences.join(', ')}
+                </div>
+            </div>
+            
+            <div style="background: #fff8e1; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #ef6c00; margin-bottom: 15px;">Today's Recommended Meals:</h3>
+                <div style="text-align: left; font-size: 16px; line-height: 1.8;">
+                    <strong>Breakfast:</strong> Oatmeal with berries (low sodium)<br>
+                    <strong>Lunch:</strong> Grilled chicken with steamed vegetables<br>
+                    <strong>Dinner:</strong> Soft fish with mashed sweet potatoes<br>
+                    <strong>Snack:</strong> Apple slices with cheese (nut-free)
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="requestMealChange()" style="
+                    background: #ff9800; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Request Meal Change</button>
+                <button onclick="updateDietaryNeeds()" style="
+                    background: #2196f3; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Update Dietary Needs</button>
+            </div>
+        </div>
+    `);
+    showSuccessFeedback('Meal planner opened!');
+}
+
+// Health Monitoring Functions
+function showHealthTracker() {
+    const healthData = {
+        bloodPressure: { systolic: 128, diastolic: 82, status: 'normal', lastCheck: 'Today 9:00 AM' },
+        heartRate: { bpm: 72, status: 'good', lastCheck: 'Today 9:00 AM' },
+        weight: { current: 165, trend: 'stable', lastCheck: 'Yesterday' },
+        mood: { rating: 8, status: 'great', lastCheck: 'Today' }
+    };
+    
+    showModal('📊 Health Tracker Dashboard', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📊</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Health Overview
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin: 20px 0;">
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 15px; border: 2px solid #4caf50;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">🩸</div>
+                    <strong style="color: #2e7d32;">Blood Pressure</strong><br>
+                    <span style="font-size: 20px; font-weight: bold;">${healthData.bloodPressure.systolic}/${healthData.bloodPressure.diastolic}</span><br>
+                    <span style="color: #666;">Status: ${healthData.bloodPressure.status}</span><br>
+                    <span style="font-size: 14px; color: #999;">${healthData.bloodPressure.lastCheck}</span>
+                </div>
+                
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 15px; border: 2px solid #2196f3;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">💗</div>
+                    <strong style="color: #1976d2;">Heart Rate</strong><br>
+                    <span style="font-size: 20px; font-weight: bold;">${healthData.heartRate.bpm} BPM</span><br>
+                    <span style="color: #666;">Status: ${healthData.heartRate.status}</span><br>
+                    <span style="font-size: 14px; color: #999;">${healthData.heartRate.lastCheck}</span>
+                </div>
+                
+                <div style="background: #fff8e1; padding: 20px; border-radius: 15px; border: 2px solid #ff9800;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">⚖️</div>
+                    <strong style="color: #ef6c00;">Weight</strong><br>
+                    <span style="font-size: 20px; font-weight: bold;">${healthData.weight.current} lbs</span><br>
+                    <span style="color: #666;">Trend: ${healthData.weight.trend}</span><br>
+                    <span style="font-size: 14px; color: #999;">${healthData.weight.lastCheck}</span>
+                </div>
+                
+                <div style="background: #fce4ec; padding: 20px; border-radius: 15px; border: 2px solid #e91e63;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">😊</div>
+                    <strong style="color: #c2185b;">Mood</strong><br>
+                    <span style="font-size: 20px; font-weight: bold;">${healthData.mood.rating}/10</span><br>
+                    <span style="color: #666;">Feeling: ${healthData.mood.status}</span><br>
+                    <span style="font-size: 14px; color: #999;">${healthData.mood.lastCheck}</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                <button onclick="logNewHealthData()" style="
+                    background: #4caf50; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Log New Reading</button>
+                <button onclick="shareHealthWithDoctor()" style="
+                    background: #2196f3; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Share with Doctor</button>
+            </div>
+        </div>
+    `);
+    showSuccessFeedback('Health tracker loaded!');
+}
+
+function showAppointmentReminder() {
+    const appointments = [
+        { doctor: 'Dr. Smith (Cardiologist)', date: 'Tomorrow', time: '10:30 AM', type: 'Check-up', urgent: false },
+        { doctor: 'Dr. Johnson (Primary Care)', date: 'Friday Dec 13', time: '2:00 PM', type: 'Routine Visit', urgent: false },
+        { doctor: 'Eye Specialist', date: 'Next Monday', time: '11:00 AM', type: 'Vision Check', urgent: true }
+    ];
+    
+    showModal('📅 Medical Appointments', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">👩‍⚕️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Upcoming Appointments
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                ${appointments.map(apt => `
+                    <div style="
+                        background: ${apt.urgent ? '#ffebee' : 'white'};
+                        padding: 20px; margin: 15px 0; border-radius: 12px;
+                        border: 3px solid ${apt.urgent ? '#f44336' : '#4caf50'};
+                    ">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                                <strong style="font-size: 18px; color: #2c3e50;">${apt.doctor}</strong><br>
+                                <span style="color: #666; font-size: 16px;">${apt.type}</span><br>
+                                <span style="color: #1976d2; font-size: 16px; font-weight: 600;">${apt.date} at ${apt.time}</span>
+                            </div>
+                            <div style="font-size: 24px;">${apt.urgent ? '🔴' : '📅'}</div>
+                        </div>
+                        ${apt.urgent ? '<div style="background: #ffcdd2; color: #d32f2f; padding: 8px; border-radius: 8px; margin-top: 10px; font-weight: 600;">Important: Don\'t forget this appointment!</div>' : ''}
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 18px; color: #2e7d32; margin: 0; font-weight: 600;">
+                    🔔 Staff will remind you 1 hour before each appointment
+                </p>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="requestTransportation()" style="
+                    background: #ff9800; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Need Transportation?</button>
+                <button onclick="rescheduleAppointment()" style="
+                    background: #2196f3; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Reschedule</button>
+            </div>
+        </div>
+    `);
+    showSuccessFeedback('Appointments displayed!');
+}
+
+function showSymptomLogger() {
+    showModal('🩺 Daily Symptom Logger', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🩺</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                How are you feeling today?
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">Quick Health Check:</h3>
+                
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 18px; color: #2c3e50; margin-bottom: 10px; display: block;"><strong>Overall Energy Level:</strong></label>
+                    <div style="display: flex; gap: 10px; justify-content: center; margin: 10px 0;">
+                        ${[1,2,3,4,5].map(num => `
+                            <button onclick="selectEnergyLevel(${num})" style="
+                                background: #e3f2fd; border: 2px solid #2196f3; width: 50px; height: 50px;
+                                border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer;
+                            ">${num}</button>
+                        `).join('')}
+                    </div>
+                    <div style="font-size: 14px; color: #666; text-align: center;">1 = Very Low, 5 = Very High</div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 18px; color: #2c3e50; margin-bottom: 10px; display: block;"><strong>Any Symptoms Today?</strong></label>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                        ${['Headache', 'Fatigue', 'Dizziness', 'Nausea', 'Pain', 'Sleep Issues'].map(symptom => `
+                            <button onclick="toggleSymptom('${symptom}')" style="
+                                background: white; border: 2px solid #ddd; padding: 10px;
+                                border-radius: 10px; cursor: pointer; font-size: 14px;
+                            ">${symptom}</button>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div style="margin: 20px 0;">
+                    <label style="font-size: 18px; color: #2c3e50; margin-bottom: 10px; display: block;"><strong>Additional Notes:</strong></label>
+                    <textarea placeholder="Describe how you're feeling or any concerns..." style="
+                        width: 100%; height: 80px; padding: 12px; border: 2px solid #ddd;
+                        border-radius: 10px; font-size: 16px; font-family: inherit; resize: vertical;
+                    "></textarea>
+                </div>
+            </div>
+            
+            <div style="background: #fff3e0; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 16px; color: #ef6c00; margin: 0;">
+                    💡 This information helps staff provide better care and can be shared with your doctor
+                </p>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="saveSymptomLog()" style="
+                    background: #4caf50; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Save Daily Log</button>
+                <button onclick="alertStaff()" style="
+                    background: #f44336; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Alert Staff Now</button>
+            </div>
+        </div>
+    `);
+    showSuccessFeedback('Symptom logger opened!');
+}
+
+// Communication Functions
+function showFamilyConnector() {
+    const familyContacts = [
+        { name: 'Sarah (Daughter)', phone: '(555) 123-4567', relationship: 'Daughter', lastContact: 'Yesterday', available: true },
+        { name: 'Michael (Son)', phone: '(555) 234-5678', relationship: 'Son', lastContact: '3 days ago', available: false },
+        { name: 'Emma (Granddaughter)', phone: '(555) 345-6789', relationship: 'Granddaughter', lastContact: 'Last week', available: true }
+    ];
+    
+    showModal('👨‍👩‍👧‍👦 Family Contacts', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">👨‍👩‍👧‍👦</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Stay Connected with Family
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                ${familyContacts.map(contact => `
+                    <div style="
+                        background: white; padding: 20px; margin: 15px 0; border-radius: 12px;
+                        border: 3px solid ${contact.available ? '#4caf50' : '#ff9800'};
+                        display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <div style="text-align: left;">
+                            <strong style="font-size: 20px; color: #2c3e50;">${contact.name}</strong><br>
+                            <span style="color: #666; font-size: 16px;">${contact.phone}</span><br>
+                            <span style="color: #1976d2; font-size: 14px;">Last contact: ${contact.lastContact}</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="font-size: 24px;">${contact.available ? '🟢' : '🟡'}</div>
+                            <span style="font-size: 12px; color: #666;">${contact.available ? 'Available' : 'May be busy'}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Easy Communication Options:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <button onclick="makePhoneCall()" style="
+                        background: #4caf50; color: white; border: none; padding: 15px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                    ">📞 Make Phone Call</button>
+                    <button onclick="sendTextMessage()" style="
+                        background: #2196f3; color: white; border: none; padding: 15px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                    ">💬 Send Text Message</button>
+                    <button onclick="scheduleVideoCall()" style="
+                        background: #ff9800; color: white; border: none; padding: 15px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                    ">📹 Schedule Video Call</button>
+                    <button onclick="recordVoiceMessage()" style="
+                        background: #9c27b0; color: white; border: none; padding: 15px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                    ">🎤 Voice Message</button>
+                </div>
+            </div>
+            
+            <div style="background: #fff3e0; padding: 15px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 16px; color: #ef6c00; margin: 0;">
+                    💡 Staff can help you with any communication method - just ask!
+                </p>
+            </div>
+        </div>
+    `);
+    showSuccessFeedback('Family contacts loaded!');
+}
+
+function showVoiceMessages() {
+    const voiceMessages = [
+        { from: 'Sarah (Daughter)', time: '2 hours ago', duration: '1:23', listened: false },
+        { from: 'Emma (Granddaughter)', time: 'Yesterday', duration: '0:45', listened: true },
+        { from: 'Michael (Son)', time: '3 days ago', duration: '2:10', listened: true }
+    ];
+    
+    showModal('🎤 Voice Messages', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🎤</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Voice Messages
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">Received Messages:</h3>
+                ${voiceMessages.map(msg => `
+                    <div style="
+                        background: ${msg.listened ? 'white' : '#e8f5e8'}; padding: 20px; margin: 15px 0;
+                        border-radius: 12px; border: 3px solid ${msg.listened ? '#ddd' : '#4caf50'};
+                        display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <div style="text-align: left;">
+                            <strong style="font-size: 18px; color: #2c3e50;">${msg.from}</strong><br>
+                            <span style="color: #666; font-size: 14px;">${msg.time} • ${msg.duration}</span>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            ${msg.listened ? '' : '<span style="background: #4caf50; color: white; padding: 4px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">NEW</span>'}
+                            <button onclick="playVoiceMessage('${msg.from}')" style="
+                                background: #2196f3; color: white; border: none; padding: 10px 15px;
+                                border-radius: 20px; font-size: 14px; cursor: pointer;
+                            ">▶️ Play</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <div style="background: #e3f2fd; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">Send New Voice Message:</h3>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="recordNewMessage()" style="
+                        background: #f44336; color: white; border: none; padding: 15px 25px;
+                        border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                        box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+                    ">🎙️ Record Message</button>
+                    <button onclick="selectRecipient()" style="
+                        background: #4caf50; color: white; border: none; padding: 15px 25px;
+                        border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                    ">📤 Send to Family</button>
+                </div>
+            </div>
+        </div>
+    `);
+    showSuccessFeedback('Voice messages loaded!');
+}
+
+function showVideoCallHelper() {
+    showModal('📹 Video Call Helper', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📹</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Easy Video Calls with Family
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">Quick Start Video Call:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <button onclick="callFamily('Sarah')" style="
+                        background: #4caf50; color: white; border: none; padding: 20px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                        display: flex; flex-direction: column; align-items: center; gap: 10px;
+                    ">
+                        <div style="font-size: 24px;">👩</div>
+                        Call Sarah
+                    </button>
+                    <button onclick="callFamily('Michael')" style="
+                        background: #2196f3; color: white; border: none; padding: 20px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                        display: flex; flex-direction: column; align-items: center; gap: 10px;
+                    ">
+                        <div style="font-size: 24px;">👨</div>
+                        Call Michael
+                    </button>
+                    <button onclick="callFamily('Emma')" style="
+                        background: #ff9800; color: white; border: none; padding: 20px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                        display: flex; flex-direction: column; align-items: center; gap: 10px;
+                    ">
+                        <div style="font-size: 24px;">👧</div>
+                        Call Emma
+                    </button>
+                    <button onclick="groupVideoCall()" style="
+                        background: #9c27b0; color: white; border: none; padding: 20px;
+                        border-radius: 15px; font-size: 16px; cursor: pointer; font-weight: bold;
+                        display: flex; flex-direction: column; align-items: center; gap: 10px;
+                    ">
+                        <div style="font-size: 24px;">👨‍👩‍👧‍👦</div>
+                        Group Call
+                    </button>
+                </div>
+            </div>
+            
+            <div style="background: #fff8e1; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #ef6c00; margin-bottom: 15px;">📋 Video Call Tips:</h3>
+                <ul style="font-size: 16px; line-height: 1.8; color: #2c3e50;">
+                    <li>Staff will help set up the call and adjust the camera</li>
+                    <li>Speak clearly and look at the camera when talking</li>
+                    <li>Use the large buttons on screen to mute/unmute</li>
+                    <li>Wave goodbye before hanging up!</li>
+                    <li>Calls can last as long as you'd like</li>
+                </ul>
+            </div>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 18px; color: #2e7d32; margin: 0; font-weight: 600;">
+                    🕐 Schedule a video call for later, or call now if they're available!
+                </p>
+            </div>
+            
+            <button onclick="requestVideoCallHelp()" style="
+                background: #ff5722; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                margin: 10px; box-shadow: 0 4px 15px rgba(255, 87, 34, 0.3);
+            ">Need Help with Video Calls?</button>
+        </div>
+    `);
+    showSuccessFeedback('Video call helper opened!');
+}
+
+// Helper Functions for Practical Support
+function requestMedicationHelp() {
+    showModal('💊 Medication Assistance', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">👩‍⚕️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Medication Help Requested
+            </p>
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 20px; color: #2e7d32; margin: 0; font-weight: 600;">
+                    ✅ Staff has been notified and will come assist you shortly!
+                </p>
+            </div>
+            <p style="font-size: 18px; color: #666;">
+                A qualified staff member will help you with your medications and answer any questions.
+            </p>
+        </div>
+    `);
+    showSuccessFeedback('Medication help requested!');
+}
+
+function customizeSchedule() {
+    showSuccessFeedback('Schedule customization requested - staff will help you personalize your daily routine!');
+}
+
+function requestMealChange() {
+    showSuccessFeedback('Meal change requested - kitchen staff will contact you about alternatives!');
+}
+
+function updateDietaryNeeds() {
+    showSuccessFeedback('Dietary needs update requested - nutritionist will review your requirements!');
+}
+
+function logNewHealthData() {
+    showSuccessFeedback('Health logging started - staff will help you record new measurements!');
+}
+
+function shareHealthWithDoctor() {
+    showSuccessFeedback('Health data will be shared with your doctor at your next visit!');
+}
+
+function requestTransportation() {
+    showSuccessFeedback('Transportation requested - staff will arrange your ride to the appointment!');
+}
+
+function rescheduleAppointment() {
+    showSuccessFeedback('Rescheduling requested - staff will contact the doctor\'s office for you!');
+}
+
+function saveSymptomLog() {
+    showSuccessFeedback('Daily health log saved - information will be available for your care team!');
+}
+
+function alertStaff() {
+    showModal('🚨 Staff Alert Sent', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🚨</div>
+            <p style="font-size: 24px; color: #f44336; margin: 20px 0; font-weight: 600;">
+                Staff Alert Activated
+            </p>
+            <div style="background: #ffebee; padding: 25px; border-radius: 15px; margin: 20px 0; border: 3px solid #f44336;">
+                <p style="font-size: 20px; color: #d32f2f; margin: 0; font-weight: 600;">
+                    ⚡ A staff member will come to check on you immediately!
+                </p>
+            </div>
+            <p style="font-size: 18px; color: #666;">
+                Please stay where you are. Help is on the way.
+            </p>
+        </div>
+    `);
+    showSuccessFeedback('Emergency staff alert sent!');
+}
+
+function makePhoneCall() {
+    showSuccessFeedback('Phone call initiated - staff will help you connect with your family member!');
+}
+
+function sendTextMessage() {
+    showSuccessFeedback('Text message helper opened - staff will help you send a message!');
+}
+
+function scheduleVideoCall() {
+    showSuccessFeedback('Video call scheduled - staff will set up the call at your preferred time!');
+}
+
+function recordVoiceMessage() {
+    showSuccessFeedback('Voice recorder ready - staff will help you record and send your message!');
+}
+
+function playVoiceMessage(sender) {
+    showSuccessFeedback(`Playing voice message from ${sender} - use the volume buttons to adjust!`);
+}
+
+function recordNewMessage() {
+    showSuccessFeedback('Voice recording started - speak clearly and staff will help send it!');
+}
+
+function selectRecipient() {
+    showSuccessFeedback('Recipient selection opened - choose who to send your voice message to!');
+}
+
+function callFamily(member) {
+    showModal(`📹 Calling ${member}`, `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📞</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Connecting to ${member}...
+            </p>
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 18px; color: #1976d2; margin: 0;">
+                    📡 Setting up video call connection<br>
+                    🔄 Staff is helping establish the call<br>
+                    ⏳ Please wait a moment...
+                </p>
+            </div>
+            <p style="font-size: 16px; color: #666;">
+                The call will start automatically once ${member} answers.
+            </p>
+        </div>
+    `);
+    showSuccessFeedback(`Video call to ${member} initiated!`);
+}
+
+function groupVideoCall() {
+    showSuccessFeedback('Group video call initiated - connecting with all available family members!');
+}
+
+function requestVideoCallHelp() {
+    showSuccessFeedback('Video call assistance requested - staff will provide step-by-step help!');
+}
