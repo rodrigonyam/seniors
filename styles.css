@@ -3324,3 +3324,135 @@ a:focus {
         justify-content: center;
     }
 }
+
+/* Offline Functionality Styling */
+.offline-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #ff9800, #f57c00);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    z-index: 1000;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+    animation: slideDown 0.5s ease-out;
+}
+
+.offline-icon {
+    font-size: 24px;
+    animation: pulse 2s infinite;
+}
+
+.offline-text {
+    flex: 1;
+    text-align: center;
+}
+
+.offline-dismiss {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.offline-dismiss:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Offline Mode Body Styling */
+.offline-mode {
+    padding-top: 60px;
+}
+
+.offline-mode .online-only {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Slide down animation for offline indicator */
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Emergency Pending Indicator */
+@keyframes emergencyPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(244, 67, 54, 0.3);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 20px rgba(244, 67, 54, 0);
+    }
+}
+
+.emergency-pending-indicator {
+    animation: emergencyPulse 2s infinite;
+}
+
+/* Offline Feature Status Styling */
+.offline-feature-available {
+    border-left: 4px solid #4caf50;
+    background: #e8f5e8;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 8px;
+}
+
+.offline-feature-limited {
+    border-left: 4px solid #ff9800;
+    background: #fff8e1;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 8px;
+}
+
+/* Responsive Offline Styling */
+@media (max-width: 768px) {
+    .offline-indicator {
+        font-size: 16px;
+        padding: 12px 15px;
+    }
+    
+    .offline-mode {
+        padding-top: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    .offline-indicator {
+        font-size: 14px;
+        padding: 10px 12px;
+    }
+    
+    .offline-text {
+        font-size: 14px;
+    }
+    
+    .offline-mode {
+        padding-top: 45px;
+    }
+}

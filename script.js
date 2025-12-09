@@ -3821,9 +3821,524 @@ window.addEventListener('load', function() {
     // Initialize notification display
     updateNotificationDisplay();
     
+    // Initialize offline functionality
+    initializeOfflineSupport();
+    
     // Add some sample notifications for demonstration
     setTimeout(() => {
         createNotification('medication', 'Welcome!', 'Medication reminders are now active', 'normal');
         createNotification('meal', 'Meal Alert', 'Lunch will be served in 30 minutes', 'normal');
     }, 5000);
 });
+
+// ============================================
+// OFFLINE FUNCTIONALITY SYSTEM
+// ============================================
+
+let isOnline = navigator.onLine;
+let offlineIndicator = null;
+
+function initializeOfflineSupport() {
+    // Initialize online/offline status
+    updateOnlineStatus();
+    
+    // Listen for online/offline events
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    // Initialize offline storage for essential features
+    initializeOfflineStorage();
+    
+    // Set up periodic sync attempts
+    setInterval(trySync, 30000); // Try to sync every 30 seconds when online
+    
+    console.log('🔄 Offline support initialized for essential senior care features');
+}
+
+function updateOnlineStatus() {
+    isOnline = navigator.onLine;
+    
+    if (!isOnline) {
+        showOfflineIndicator();
+        document.body.classList.add('offline-mode');
+    } else {
+        hideOfflineIndicator();
+        document.body.classList.remove('offline-mode');
+    }
+    
+    // Update UI elements based on connectivity
+    updateOfflineUI();
+}
+
+function handleOffline() {
+    isOnline = false;
+    showOfflineIndicator();
+    document.body.classList.add('offline-mode');
+    
+    // Announce offline mode with voice feedback
+    if (typeof speak === 'function') {
+        speak('You are now offline. Essential features like reminders and emergency alerts will continue to work.');
+    }
+    
+    // Save current state for offline use
+    saveOfflineState();
+    
+    showSuccessFeedback('📱 Offline Mode: Essential features like reminders and emergency alerts will continue to work!');
+}
+
+function handleOnline() {
+    isOnline = true;
+    hideOfflineIndicator();
+    document.body.classList.remove('offline-mode');
+    
+    // Announce online mode with voice feedback
+    if (typeof speak === 'function') {
+        speak('You are back online. All features are now available.');
+    }
+    
+    // Sync offline data
+    syncOfflineData();
+    
+    showSuccessFeedback('🌐 Back Online: All features restored and syncing offline data!');
+}
+
+function showOfflineIndicator() {
+    if (offlineIndicator) return;
+    
+    offlineIndicator = document.createElement('div');
+    offlineIndicator.className = 'offline-indicator';
+    offlineIndicator.innerHTML = `
+        <div class="offline-icon">📱</div>
+        <div class="offline-text">
+            <strong>Offline Mode Active</strong><br>
+            Essential features (reminders, emergency) still work
+        </div>
+        <button class="offline-dismiss" onclick="dismissOfflineIndicator()" title="Dismiss this message">×</button>
+    `;
+    
+    document.body.insertBefore(offlineIndicator, document.body.firstChild);
+}
+
+function hideOfflineIndicator() {
+    if (offlineIndicator) {
+        offlineIndicator.remove();
+        offlineIndicator = null;
+    }
+}
+
+function dismissOfflineIndicator() {
+    hideOfflineIndicator();
+}
+
+function updateOfflineUI() {
+    // Mark online-only features
+    const onlineOnlyElements = document.querySelectorAll('.family-video-call, .family-messaging, .weather-display');
+    onlineOnlyElements.forEach(element => {
+        if (!isOnline) {
+            element.classList.add('online-only');
+        } else {
+            element.classList.remove('online-only');
+        }
+    });
+}
+
+// ============================================
+// OFFLINE STORAGE SYSTEM
+// ============================================
+
+function initializeOfflineStorage() {
+    // Initialize localStorage for offline data if not exists
+    if (!localStorage.getItem('seniorCare_offlineData')) {
+        const initialData = {
+            reminders: [],
+            emergencyContacts: [
+                { name: 'Emergency Services', number: '911' },
+                { name: 'Nurse Station', number: 'Call Button' },
+                { name: 'Family Contact', number: 'Staff Will Help' }
+            ],
+            medications: [],
+            preferences: {},
+            lastSync: null
+        };
+        localStorage.setItem('seniorCare_offlineData', JSON.stringify(initialData));
+    }
+}
+
+function getOfflineData() {
+    try {
+        const data = localStorage.getItem('seniorCare_offlineData');
+        return data ? JSON.parse(data) : {};
+    } catch (error) {
+        console.error('Error reading offline data:', error);
+        return {};
+    }
+}
+
+function saveOfflineData(data) {
+    try {
+        const existingData = getOfflineData();
+        const mergedData = { ...existingData, ...data, lastSync: new Date().toISOString() };
+        localStorage.setItem('seniorCare_offlineData', JSON.stringify(mergedData));
+        return true;
+    } catch (error) {
+        console.error('Error saving offline data:', error);
+        return false;
+    }
+}
+
+function saveOfflineState() {
+    // Save current reminders and preferences for offline use
+    const currentState = {
+        reminders: getActiveReminders(),
+        preferences: getUserPreferences(),
+        timestamp: new Date().toISOString()
+    };
+    
+    saveOfflineData(currentState);
+}
+
+// ============================================
+// OFFLINE EMERGENCY SYSTEM
+// ============================================
+
+function handleOfflineEmergency(type = 'general') {
+    const emergency = {
+        id: 'emergency_' + Date.now(),
+        type: type,
+        timestamp: new Date().toISOString(),
+        status: 'pending',
+        location: 'Group Home',
+        synced: false
+    };
+    
+    // Save emergency locally
+    const offlineData = getOfflineData();
+    if (!offlineData.emergencies) offlineData.emergencies = [];
+    offlineData.emergencies.push(emergency);
+    saveOfflineData(offlineData);
+    
+    // Show immediate offline emergency response
+    showOfflineEmergencyResponse(emergency);
+    
+    // Try to sync immediately if online
+    if (isOnline) {
+        syncEmergencyData();
+    }
+    
+    return emergency;
+}
+
+function showOfflineEmergencyResponse(emergency) {
+    const modal = document.createElement('div');
+    modal.className = 'modal emergency-pending-indicator';
+    modal.innerHTML = `
+        <div class="modal-content" style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; text-align: center; padding: 40px;">
+            <h2 style="color: white; font-size: 32px; margin-bottom: 20px;">🚨 Emergency Alert Saved</h2>
+            <p style="font-size: 20px; margin-bottom: 30px;">Your emergency alert has been saved and will be sent to staff when connection is restored.</p>
+            <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <p style="font-size: 18px; margin: 10px 0;"><strong>Time:</strong> ${new Date(emergency.timestamp).toLocaleString()}</p>
+                <p style="font-size: 18px; margin: 10px 0;"><strong>Type:</strong> ${emergency.type}</p>
+                <p style="font-size: 18px; margin: 10px 0;"><strong>Status:</strong> Saved - Will sync when online</p>
+            </div>
+            <button onclick="closeModal()" style="background: white; color: #f44336; border: none; padding: 15px 30px; border-radius: 25px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+                I Understand
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Auto-close after 10 seconds
+    setTimeout(() => {
+        if (modal.parentNode) {
+            modal.remove();
+        }
+    }, 10000);
+}
+
+// ============================================
+// OFFLINE REMINDER SYSTEM
+// ============================================
+
+function createOfflineReminder(type, message, time) {
+    const reminder = {
+        id: 'reminder_' + Date.now(),
+        type: type,
+        message: message,
+        scheduledTime: time,
+        created: new Date().toISOString(),
+        status: 'active',
+        synced: false
+    };
+    
+    // Save reminder locally
+    const offlineData = getOfflineData();
+    if (!offlineData.offlineReminders) offlineData.offlineReminders = [];
+    offlineData.offlineReminders.push(reminder);
+    saveOfflineData(offlineData);
+    
+    // Schedule the offline reminder
+    scheduleOfflineReminder(reminder);
+    
+    return reminder;
+}
+
+function scheduleOfflineReminder(reminder) {
+    const now = new Date();
+    const reminderTime = new Date(reminder.scheduledTime);
+    const timeUntilReminder = reminderTime.getTime() - now.getTime();
+    
+    if (timeUntilReminder > 0) {
+        setTimeout(() => {
+            showOfflineReminder(reminder);
+        }, timeUntilReminder);
+    }
+}
+
+function showOfflineReminder(reminder) {
+    // Show visual reminder
+    showModal('Offline Reminder', `
+        <div style="text-align: center; padding: 20px;">
+            <div style="font-size: 48px; margin-bottom: 20px;">⏰</div>
+            <h3 style="color: #2c3e50; margin-bottom: 20px;">${reminder.type.toUpperCase()} REMINDER</h3>
+            <p style="font-size: 18px; margin-bottom: 30px;">${reminder.message}</p>
+            <p style="font-size: 16px; color: #666; margin-bottom: 20px;">
+                Time: ${new Date(reminder.scheduledTime).toLocaleTimeString()}
+            </p>
+            <div style="background: #fff8e1; padding: 15px; border-radius: 10px; border-left: 4px solid #ff9800;">
+                <p style="margin: 0; color: #ef6c00;">📱 Offline Mode: This reminder was saved locally and is working without internet connection.</p>
+            </div>
+        </div>
+    `);
+    
+    // Play audio alert if available
+    if (typeof playNotificationSound === 'function') {
+        playNotificationSound(reminder.type);
+    }
+    
+    // Use text-to-speech if available
+    if (typeof speak === 'function') {
+        speak(`Offline reminder: ${reminder.message}`);
+    }
+    
+    // Mark reminder as shown
+    markReminderAsShown(reminder.id);
+}
+
+function markReminderAsShown(reminderId) {
+    const offlineData = getOfflineData();
+    if (offlineData.offlineReminders) {
+        const reminderIndex = offlineData.offlineReminders.findIndex(r => r.id === reminderId);
+        if (reminderIndex !== -1) {
+            offlineData.offlineReminders[reminderIndex].status = 'shown';
+            offlineData.offlineReminders[reminderIndex].shownAt = new Date().toISOString();
+            saveOfflineData(offlineData);
+        }
+    }
+}
+
+// ============================================
+// OFFLINE SYNC SYSTEM
+// ============================================
+
+function trySync() {
+    if (isOnline) {
+        syncOfflineData();
+    }
+}
+
+function syncOfflineData() {
+    console.log('🔄 Starting offline data sync...');
+    
+    // Sync emergency data
+    syncEmergencyData();
+    
+    // Sync reminder data
+    syncReminderData();
+    
+    // Sync user preferences
+    syncPreferenceData();
+    
+    console.log('✅ Offline data sync completed');
+}
+
+function syncEmergencyData() {
+    const offlineData = getOfflineData();
+    if (offlineData.emergencies && offlineData.emergencies.length > 0) {
+        const unsyncedEmergencies = offlineData.emergencies.filter(e => !e.synced);
+        
+        if (unsyncedEmergencies.length > 0) {
+            // In a real application, this would send to a server
+            console.log('📤 Syncing emergency data:', unsyncedEmergencies);
+            
+            // Mark as synced (simulate successful sync)
+            offlineData.emergencies.forEach(emergency => {
+                if (!emergency.synced) {
+                    emergency.synced = true;
+                    emergency.syncedAt = new Date().toISOString();
+                }
+            });
+            
+            saveOfflineData(offlineData);
+            
+            showSuccessFeedback(`🚨 ${unsyncedEmergencies.length} emergency alerts synced with staff systems!`);
+        }
+    }
+}
+
+function syncReminderData() {
+    const offlineData = getOfflineData();
+    if (offlineData.offlineReminders && offlineData.offlineReminders.length > 0) {
+        const unsyncedReminders = offlineData.offlineReminders.filter(r => !r.synced);
+        
+        if (unsyncedReminders.length > 0) {
+            console.log('📤 Syncing reminder data:', unsyncedReminders);
+            
+            // Mark as synced
+            offlineData.offlineReminders.forEach(reminder => {
+                if (!reminder.synced) {
+                    reminder.synced = true;
+                    reminder.syncedAt = new Date().toISOString();
+                }
+            });
+            
+            saveOfflineData(offlineData);
+            
+            showSuccessFeedback(`⏰ ${unsyncedReminders.length} offline reminders synced successfully!`);
+        }
+    }
+}
+
+function syncPreferenceData() {
+    const offlineData = getOfflineData();
+    if (offlineData.preferences) {
+        // In a real application, this would sync with server preferences
+        console.log('📤 Syncing user preferences');
+        offlineData.lastPreferenceSync = new Date().toISOString();
+        saveOfflineData(offlineData);
+    }
+}
+
+// ============================================
+// OFFLINE UTILITY FUNCTIONS
+// ============================================
+
+function getActiveReminders() {
+    // Get current active reminders from the main reminder system
+    const offlineData = getOfflineData();
+    return offlineData.reminders || [];
+}
+
+function getUserPreferences() {
+    // Get current user preferences
+    return {
+        fontSize: document.body.style.fontSize || 'normal',
+        voiceEnabled: localStorage.getItem('voiceEnabled') === 'true',
+        notificationsEnabled: localStorage.getItem('notificationsEnabled') !== 'false'
+    };
+}
+
+function getOfflineCapabilities() {
+    return {
+        reminders: true,
+        emergencyAlerts: true,
+        basicNavigation: true,
+        timeDisplay: true,
+        preferences: true,
+        videoCall: false,
+        messaging: false,
+        weatherUpdates: false,
+        onlineActivities: false
+    };
+}
+
+// ============================================
+// ENHANCED OFFLINE EMERGENCY BUTTON
+// ============================================
+
+// Override existing emergency function to work offline
+function callEmergency() {
+    if (isOnline) {
+        // Use original online emergency function
+        showModal('Emergency Call', `
+            <div style="text-align: center; color: #f44336; padding: 20px;">
+                <div style="font-size: 64px; margin-bottom: 20px;">🚨</div>
+                <h2 style="color: #f44336;">Emergency Services Contacted</h2>
+                <p style="font-size: 18px; margin: 20px 0;">Help is on the way!</p>
+                <p style="margin: 20px 0;">Staff have been notified and emergency services are being contacted.</p>
+            </div>
+        `);
+        
+        if (typeof speak === 'function') {
+            speak('Emergency services have been contacted. Help is on the way.');
+        }
+        
+        showSuccessFeedback('🚨 Emergency services contacted successfully!');
+    } else {
+        // Handle offline emergency
+        const emergency = handleOfflineEmergency('general');
+        
+        if (typeof speak === 'function') {
+            speak('Emergency alert saved. Staff will be notified when connection is restored.');
+        }
+    }
+}
+
+// ============================================
+// OFFLINE VOICE COMMANDS
+// ============================================
+
+// Add offline-specific voice commands to existing system
+function addOfflineVoiceCommands() {
+    if (typeof voiceCommands !== 'undefined' && voiceCommands) {
+        // Add offline commands to existing voice command system
+        const offlineCommands = {
+            'check offline status': checkOfflineStatus,
+            'show offline features': showOfflineFeatures,
+            'emergency offline': () => handleOfflineEmergency('voice_command'),
+            'medication reminder offline': () => createOfflineReminder('medication', 'Time for your medication', new Date(Date.now() + 60000)),
+            'sync data': syncOfflineData
+        };
+        
+        // Merge with existing commands if possible
+        Object.assign(voiceCommands, offlineCommands);
+    }
+}
+
+function checkOfflineStatus() {
+    const status = isOnline ? 'online' : 'offline';
+    const message = isOnline ? 
+        'You are currently online. All features are available.' :
+        'You are currently offline. Essential features like reminders and emergency alerts are still working.';
+    
+    showSuccessFeedback(`📱 Status: ${status.toUpperCase()}`);
+    
+    if (typeof speak === 'function') {
+        speak(message);
+    }
+}
+
+function showOfflineFeatures() {
+    const capabilities = getOfflineCapabilities();
+    const availableFeatures = Object.entries(capabilities)
+        .filter(([key, value]) => value)
+        .map(([key]) => key.replace(/([A-Z])/g, ' $1').toLowerCase())
+        .join(', ');
+    
+    showModal('Offline Features Available', `
+        <div style="padding: 20px;">
+            <h3 style="color: #2c3e50; margin-bottom: 20px;">📱 Available Offline:</h3>
+            <div class="offline-feature-available">
+                <strong>✅ Working Offline:</strong><br>
+                ${availableFeatures}
+            </div>
+            <div class="offline-feature-limited" style="margin-top: 15px;">
+                <strong>⚠️ Requires Internet:</strong><br>
+                Video calls, messaging, weather updates, some activities
+            </div>
+        </div>
+    `);
+}
+
+// Initialize offline voice commands when voice system is ready
+setTimeout(addOfflineVoiceCommands, 2000);

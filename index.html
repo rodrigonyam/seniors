@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sunshine Group Home - Welcome</title>
+    <title>Senior Group Home - Welcome</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196f3">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Senior Hub">
     <link href="https://fonts.googleapis.com/css2?family=Arial:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -548,6 +554,76 @@
         </div>
     </footer>
 
+    <!-- Offline Status Indicator -->
+    <div id="offline-indicator" class="offline-indicator" style="display: none;">
+        <span class="offline-icon">📶</span>
+        <span class="offline-text">You're offline - Essential features still available</span>
+        <button onclick="dismissOfflineIndicator()" class="offline-dismiss">×</button>
+    </div>
+
     <script src="script.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                        // Check for offline functionality
+                        checkOfflineCapabilities();
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // Check online/offline status
+        function checkOfflineCapabilities() {
+            const offlineIndicator = document.getElementById('offline-indicator');
+            
+            function updateOnlineStatus() {
+                if (navigator.onLine) {
+                    offlineIndicator.style.display = 'none';
+                    document.body.classList.remove('offline-mode');
+                } else {
+                    offlineIndicator.style.display = 'flex';
+                    document.body.classList.add('offline-mode');
+                }
+            }
+            
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            updateOnlineStatus();
+        }
+        
+        function dismissOfflineIndicator() {
+            document.getElementById('offline-indicator').style.display = 'none';
+        }
+        
+        // Handle PWA shortcuts
+        if (window.location.search.includes('action=')) {
+            const params = new URLSearchParams(window.location.search);
+            const action = params.get('action');
+            
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    switch(action) {
+                        case 'emergency':
+                            if (typeof alertStaff === 'function') alertStaff();
+                            break;
+                        case 'medication':
+                            if (typeof showMedicationReminder === 'function') showMedicationReminder();
+                            break;
+                        case 'family':
+                            if (typeof startVideoCall === 'function') startVideoCall();
+                            break;
+                    }
+                }, 1000);
+            });
+        }
+    </script>
 </body>
 </html>
