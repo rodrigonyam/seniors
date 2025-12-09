@@ -2569,3 +2569,852 @@ window.addEventListener('load', function() {
         }
     });
 });
+
+// Reminders & Alerts System
+let notificationsEnabled = true;
+let activeNotifications = [];
+let medicationSchedule = [
+    { id: 1, name: 'Blood Pressure Medication', time: '08:00', taken: false, frequency: 'daily', dosage: '10mg' },
+    { id: 2, name: 'Vitamin D', time: '12:00', taken: false, frequency: 'daily', dosage: '1000 IU' },
+    { id: 3, name: 'Heart Medication', time: '18:00', taken: false, frequency: 'daily', dosage: '5mg' },
+    { id: 4, name: 'Sleep Aid', time: '21:00', taken: false, frequency: 'as needed', dosage: '25mg' }
+];
+
+let mealSchedule = [
+    { id: 1, name: 'Breakfast', time: '07:30', served: false, menu: 'Oatmeal with berries' },
+    { id: 2, name: 'Morning Snack', time: '10:00', served: false, menu: 'Apple slices with cheese' },
+    { id: 3, name: 'Lunch', time: '12:30', served: false, menu: 'Grilled chicken salad' },
+    { id: 4, name: 'Afternoon Snack', time: '15:00', served: false, menu: 'Yogurt with granola' },
+    { id: 5, name: 'Dinner', time: '18:00', served: false, menu: 'Baked salmon with vegetables' },
+    { id: 6, name: 'Evening Snack', time: '20:00', served: false, menu: 'Herbal tea with crackers' }
+];
+
+let activitySchedule = [
+    { id: 1, name: 'Morning Exercise', time: '09:00', joined: false, type: 'physical', location: 'Recreation Room' },
+    { id: 2, name: 'Bingo', time: '14:00', joined: false, type: 'social', location: 'Main Hall' },
+    { id: 3, name: 'Book Club', time: '15:30', joined: false, type: 'educational', location: 'Library' },
+    { id: 4, name: 'Music Therapy', time: '16:30', joined: false, type: 'therapeutic', location: 'Music Room' },
+    { id: 5, name: 'Movie Night', time: '19:00', joined: false, type: 'entertainment', location: 'Theater Room' }
+];
+
+// Notification System Functions
+function createNotification(type, title, message, urgency = 'normal', actionCallback = null) {
+    const notification = {
+        id: Date.now(),
+        type: type, // 'medication', 'meal', 'activity', 'general'
+        title: title,
+        message: message,
+        urgency: urgency, // 'low', 'normal', 'high', 'critical'
+        timestamp: new Date(),
+        read: false,
+        actionCallback: actionCallback
+    };
+    
+    activeNotifications.push(notification);
+    updateNotificationDisplay();
+    
+    if (notificationsEnabled) {
+        showNotificationPopup(notification);
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(title, {
+                body: message,
+                icon: getNotificationIcon(type),
+                tag: notification.id
+            });
+        }
+    }
+    
+    return notification.id;
+}
+
+function showNotificationPopup(notification) {
+    const popup = document.createElement('div');
+    popup.className = `notification-popup ${notification.urgency}`;
+    popup.innerHTML = `
+        <div class="notification-content">
+            <div class="notification-header">
+                <span class="notification-type-icon">${getNotificationIcon(notification.type)}</span>
+                <strong class="notification-title">${notification.title}</strong>
+                <button class="notification-close" onclick="closeNotificationPopup(this)">&times;</button>
+            </div>
+            <div class="notification-message">${notification.message}</div>
+            ${notification.actionCallback ? `
+                <div class="notification-actions">
+                    <button class="notification-action-btn" onclick="${notification.actionCallback}()">Take Action</button>
+                    <button class="notification-dismiss-btn" onclick="closeNotificationPopup(this)">Dismiss</button>
+                </div>
+            ` : `
+                <div class="notification-actions">
+                    <button class="notification-dismiss-btn" onclick="closeNotificationPopup(this)">OK</button>
+                </div>
+            `}
+        </div>
+    `;
+    
+    document.body.appendChild(popup);
+    
+    // Auto-dismiss after appropriate time based on urgency
+    const dismissTime = {
+        'low': 5000,
+        'normal': 10000,
+        'high': 15000,
+        'critical': 0 // Don't auto-dismiss critical notifications
+    };
+    
+    if (dismissTime[notification.urgency] > 0) {
+        setTimeout(() => {
+            if (document.body.contains(popup)) {
+                closeNotificationPopup(popup.querySelector('.notification-close'));
+            }
+        }, dismissTime[notification.urgency]);
+    }
+    
+    // Speak notification if text-to-speech is enabled
+    if (speechEnabled) {
+        speak(`${notification.title}. ${notification.message}`);
+    }
+}
+
+function closeNotificationPopup(button) {
+    const popup = button.closest('.notification-popup');
+    if (popup) {
+        popup.style.animation = 'slideOut 0.3s ease-in';
+        setTimeout(() => {
+            if (document.body.contains(popup)) {
+                document.body.removeChild(popup);
+            }
+        }, 300);
+    }
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'medication': '💊',
+        'meal': '🍽️',
+        'activity': '🎯',
+        'general': '📢',
+        'emergency': '🚨',
+        'reminder': '⏰'
+    };
+    return icons[type] || '📢';
+}
+
+// Medication Alert Functions
+function showMedicationAlerts() {
+    const currentTime = new Date();
+    const upcomingMeds = medicationSchedule.filter(med => {
+        const medTime = new Date();
+        const [hours, minutes] = med.time.split(':');
+        medTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        return !med.taken && medTime <= currentTime;
+    });
+    
+    showModal('💊 Medication Alerts', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">💊</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Current Medication Alerts
+            </p>
+            
+            ${upcomingMeds.length > 0 ? `
+                <div style="background: #ffebee; padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px solid #f44336;">
+                    <h3 style="color: #d32f2f; margin-bottom: 20px;">⚠️ Medications Due Now:</h3>
+                    ${upcomingMeds.map(med => `
+                        <div style="background: white; padding: 15px; margin: 10px 0; border-radius: 10px; border: 2px solid #f44336;">
+                            <strong style="font-size: 18px; color: #d32f2f;">${med.name}</strong><br>
+                            <span style="color: #666;">Dosage: ${med.dosage} • Due: ${med.time}</span><br>
+                            <button onclick="markMedicationTaken(${med.id})" style="
+                                background: #4caf50; color: white; border: none; padding: 8px 15px;
+                                border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 8px;
+                            ">Mark as Taken</button>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : `
+                <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <p style="font-size: 20px; color: #2e7d32; margin: 0; font-weight: 600;">
+                        ✅ All medications are up to date!
+                    </p>
+                </div>
+            `}
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Today's Schedule:</h3>
+                ${medicationSchedule.map(med => `
+                    <div style="
+                        background: ${med.taken ? '#e8f5e8' : 'white'}; padding: 12px; margin: 8px 0; border-radius: 8px;
+                        border: 2px solid ${med.taken ? '#4caf50' : '#ddd'}; display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <div>
+                            <strong>${med.name}</strong><br>
+                            <span style="color: #666; font-size: 14px;">${med.time} • ${med.dosage}</span>
+                        </div>
+                        <div style="font-size: 20px;">${med.taken ? '✅' : '⏰'}</div>
+                    </div>
+                `).join('')}
+            </div>
+            
+            <button onclick="setupMedicationReminders()" style="
+                background: #2196f3; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+            ">Setup Reminders</button>
+        </div>
+    `);
+}
+
+function markMedicationTaken(medId) {
+    const medication = medicationSchedule.find(med => med.id === medId);
+    if (medication) {
+        medication.taken = true;
+        createNotification('medication', 'Medication Confirmed', 
+            `✅ ${medication.name} marked as taken at ${new Date().toLocaleTimeString()}`, 'normal');
+        showSuccessFeedback(`${medication.name} marked as taken!`);
+        updateNotificationDisplay();
+    }
+}
+
+function setupMedicationReminders() {
+    showModal('⚙️ Medication Reminder Setup', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">⚙️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Customize Your Medication Reminders
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">Reminder Settings:</h3>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: block; margin-bottom: 8px;"><strong>Reminder Time Before Dose:</strong></label>
+                    <select style="width: 100%; padding: 8px; font-size: 16px; border-radius: 5px; border: 2px solid #ddd;">
+                        <option value="0">At dose time</option>
+                        <option value="5" selected>5 minutes before</option>
+                        <option value="10">10 minutes before</option>
+                        <option value="15">15 minutes before</option>
+                        <option value="30">30 minutes before</option>
+                    </select>
+                </div>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: block; margin-bottom: 8px;"><strong>Reminder Method:</strong></label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Visual notifications</label>
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Audio alerts</label>
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Voice announcements</label>
+                        <label style="font-size: 14px;"><input type="checkbox"> Staff notification</label>
+                    </div>
+                </div>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: block; margin-bottom: 8px;"><strong>Snooze Options:</strong></label>
+                    <select style="width: 100%; padding: 8px; font-size: 16px; border-radius: 5px; border: 2px solid #ddd;">
+                        <option value="5" selected>5 minutes</option>
+                        <option value="10">10 minutes</option>
+                        <option value="15">15 minutes</option>
+                        <option value="none">No snooze</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="saveMedicationSettings()" style="
+                    background: #4caf50; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Save Settings</button>
+                <button onclick="testMedicationAlert()" style="
+                    background: #ff9800; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Test Alert</button>
+            </div>
+        </div>
+    `);
+}
+
+// Meal Alert Functions
+function showMealAlerts() {
+    const currentTime = new Date();
+    const upcomingMeals = mealSchedule.filter(meal => {
+        const mealTime = new Date();
+        const [hours, minutes] = meal.time.split(':');
+        mealTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        return !meal.served && mealTime <= currentTime;
+    });
+    
+    showModal('🍽️ Meal Time Alerts', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🍽️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Current Meal Alerts
+            </p>
+            
+            ${upcomingMeals.length > 0 ? `
+                <div style="background: #fff8e1; padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px solid #ff9800;">
+                    <h3 style="color: #ef6c00; margin-bottom: 20px;">🔔 Meals Ready Now:</h3>
+                    ${upcomingMeals.map(meal => `
+                        <div style="background: white; padding: 15px; margin: 10px 0; border-radius: 10px; border: 2px solid #ff9800;">
+                            <strong style="font-size: 18px; color: #ef6c00;">${meal.name}</strong><br>
+                            <span style="color: #666;">Menu: ${meal.menu} • Time: ${meal.time}</span><br>
+                            <button onclick="confirmMealAttendance(${meal.id})" style="
+                                background: #4caf50; color: white; border: none; padding: 8px 15px;
+                                border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 8px;
+                            ">I'm Coming to Eat</button>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : `
+                <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <p style="font-size: 20px; color: #2e7d32; margin: 0; font-weight: 600;">
+                        ✅ No immediate meal alerts. Next meal coming up!
+                    </p>
+                </div>
+            `}
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Today's Meal Schedule:</h3>
+                ${mealSchedule.map(meal => `
+                    <div style="
+                        background: ${meal.served ? '#e8f5e8' : 'white'}; padding: 12px; margin: 8px 0; border-radius: 8px;
+                        border: 2px solid ${meal.served ? '#4caf50' : '#ddd'}; display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <div>
+                            <strong>${meal.name}</strong><br>
+                            <span style="color: #666; font-size: 14px;">${meal.time} • ${meal.menu}</span>
+                        </div>
+                        <div style="font-size: 20px;">${meal.served ? '✅' : '🍽️'}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `);
+}
+
+function confirmMealAttendance(mealId) {
+    const meal = mealSchedule.find(m => m.id === mealId);
+    if (meal) {
+        meal.served = true;
+        createNotification('meal', 'Meal Confirmed', 
+            `🍽️ Confirmed attendance for ${meal.name}`, 'normal');
+        showSuccessFeedback(`Confirmed for ${meal.name}!`);
+    }
+}
+
+// Activity Alert Functions
+function showActivityAlerts() {
+    const currentTime = new Date();
+    const upcomingActivities = activitySchedule.filter(activity => {
+        const activityTime = new Date();
+        const [hours, minutes] = activity.time.split(':');
+        activityTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        const timeDiff = activityTime.getTime() - currentTime.getTime();
+        return !activity.joined && timeDiff > 0 && timeDiff <= 3600000; // Within 1 hour
+    });
+    
+    showModal('🎯 Activity Notifications', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🎯</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Upcoming Activity Alerts
+            </p>
+            
+            ${upcomingActivities.length > 0 ? `
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px solid #2196f3;">
+                    <h3 style="color: #1976d2; margin-bottom: 20px;">🕐 Starting Soon:</h3>
+                    ${upcomingActivities.map(activity => `
+                        <div style="background: white; padding: 15px; margin: 10px 0; border-radius: 10px; border: 2px solid #2196f3;">
+                            <strong style="font-size: 18px; color: #1976d2;">${activity.name}</strong><br>
+                            <span style="color: #666;">Time: ${activity.time} • Location: ${activity.location}</span><br>
+                            <button onclick="joinActivity(${activity.id})" style="
+                                background: #4caf50; color: white; border: none; padding: 8px 15px;
+                                border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 8px;
+                            ">Join Activity</button>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : `
+                <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin: 20px 0;">
+                    <p style="font-size: 20px; color: #2e7d32; margin: 0; font-weight: 600;">
+                        📅 No immediate activities. Check the full schedule below!
+                    </p>
+                </div>
+            `}
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Today's Activity Schedule:</h3>
+                ${activitySchedule.map(activity => `
+                    <div style="
+                        background: ${activity.joined ? '#e8f5e8' : 'white'}; padding: 12px; margin: 8px 0; border-radius: 8px;
+                        border: 2px solid ${activity.joined ? '#4caf50' : '#ddd'}; display: flex; justify-content: space-between; align-items: center;
+                    ">
+                        <div>
+                            <strong>${activity.name}</strong><br>
+                            <span style="color: #666; font-size: 14px;">${activity.time} • ${activity.location}</span>
+                        </div>
+                        <div style="font-size: 20px;">${activity.joined ? '✅' : '🎯'}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `);
+}
+
+function joinActivity(activityId) {
+    const activity = activitySchedule.find(a => a.id === activityId);
+    if (activity) {
+        activity.joined = true;
+        createNotification('activity', 'Activity Joined', 
+            `🎯 You're registered for ${activity.name} at ${activity.time}`, 'normal');
+        showSuccessFeedback(`Joined ${activity.name}!`);
+    }
+}
+
+// Notification Management Functions
+function showAllNotifications() {
+    showModal('📋 All Notifications', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📋</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Notification History
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0; max-height: 400px; overflow-y: auto;">
+                ${activeNotifications.length > 0 ? 
+                    activeNotifications.slice().reverse().map(notif => `
+                        <div style="
+                            background: ${notif.read ? '#f0f0f0' : 'white'}; padding: 15px; margin: 10px 0; border-radius: 10px;
+                            border: 2px solid ${getNotificationColor(notif.urgency)}; text-align: left;
+                        ">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <span style="font-size: 20px; margin-right: 10px;">${getNotificationIcon(notif.type)}</span>
+                                    <strong style="font-size: 16px;">${notif.title}</strong><br>
+                                    <span style="color: #666; font-size: 14px;">${notif.message}</span><br>
+                                    <span style="color: #999; font-size: 12px;">${notif.timestamp.toLocaleString()}</span>
+                                </div>
+                                ${!notif.read ? `<button onclick="markNotificationRead(${notif.id})" style="
+                                    background: #2196f3; color: white; border: none; padding: 5px 10px;
+                                    border-radius: 10px; font-size: 12px; cursor: pointer;
+                                ">Mark Read</button>` : ''}
+                            </div>
+                        </div>
+                    `).join('') : 
+                    '<p style="color: #666; font-style: italic;">No notifications yet today.</p>'
+                }
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="clearAllNotifications()" style="
+                    background: #ff9800; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Clear All</button>
+                <button onclick="openNotificationSettings()" style="
+                    background: #2196f3; color: white; border: none; padding: 12px 25px;
+                    border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;
+                ">Settings</button>
+            </div>
+        </div>
+    `);
+}
+
+function updateNotificationDisplay() {
+    const unreadCount = activeNotifications.filter(n => !n.read).length;
+    const countElement = document.getElementById('notificationCount');
+    if (countElement) {
+        countElement.textContent = unreadCount;
+        countElement.style.display = unreadCount > 0 ? 'block' : 'none';
+    }
+    
+    const activeContainer = document.getElementById('activeNotifications');
+    if (activeContainer) {
+        const recentNotifications = activeNotifications.slice(-3).reverse();
+        activeContainer.innerHTML = recentNotifications.length > 0 ? 
+            recentNotifications.map(notif => `
+                <div class="notification-item ${notif.urgency} ${notif.read ? 'read' : 'unread'}">
+                    <span class="notif-icon">${getNotificationIcon(notif.type)}</span>
+                    <div class="notif-content">
+                        <strong>${notif.title}</strong>
+                        <p>${notif.message}</p>
+                        <small>${notif.timestamp.toLocaleTimeString()}</small>
+                    </div>
+                </div>
+            `).join('') : 
+            '<p class="no-notifications">No recent notifications</p>';
+    }
+}
+
+function getNotificationColor(urgency) {
+    const colors = {
+        'low': '#2196f3',
+        'normal': '#4caf50',
+        'high': '#ff9800',
+        'critical': '#f44336'
+    };
+    return colors[urgency] || '#4caf50';
+}
+
+// Automatic Reminder System
+function startReminderSystem() {
+    // Check for reminders every minute
+    setInterval(checkReminders, 60000);
+    
+    // Initial check
+    setTimeout(checkReminders, 5000);
+}
+
+function checkReminders() {
+    const now = new Date();
+    const currentTime = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    
+    // Check medication reminders
+    medicationSchedule.forEach(med => {
+        if (!med.taken && med.time === currentTime) {
+            createNotification('medication', 'Medication Reminder', 
+                `Time to take your ${med.name} (${med.dosage})`, 'high', 'showMedicationAlerts');
+        }
+    });
+    
+    // Check meal reminders (15 minutes before)
+    mealSchedule.forEach(meal => {
+        const mealTime = new Date();
+        const [hours, minutes] = meal.time.split(':');
+        mealTime.setHours(parseInt(hours), parseInt(minutes) - 15, 0, 0);
+        
+        if (!meal.served && mealTime.getHours() === now.getHours() && mealTime.getMinutes() === now.getMinutes()) {
+            createNotification('meal', 'Meal Reminder', 
+                `${meal.name} will be served in 15 minutes. Menu: ${meal.menu}`, 'normal', 'showMealAlerts');
+        }
+    });
+    
+    // Check activity reminders (30 minutes before)
+    activitySchedule.forEach(activity => {
+        const activityTime = new Date();
+        const [hours, minutes] = activity.time.split(':');
+        activityTime.setHours(parseInt(hours), parseInt(minutes) - 30, 0, 0);
+        
+        if (!activity.joined && activityTime.getHours() === now.getHours() && activityTime.getMinutes() === now.getMinutes()) {
+            createNotification('activity', 'Activity Reminder', 
+                `${activity.name} starts in 30 minutes at ${activity.location}`, 'normal', 'showActivityAlerts');
+        }
+    });
+}
+
+// Utility Functions
+function toggleNotifications() {
+    notificationsEnabled = !notificationsEnabled;
+    const toggleBtn = document.getElementById('notificationToggle');
+    if (toggleBtn) {
+        toggleBtn.innerHTML = `<span class="notification-icon">${notificationsEnabled ? '🔔' : '🔕'}</span>`;
+        toggleBtn.title = notificationsEnabled ? 'Turn Off Notifications' : 'Turn On Notifications';
+    }
+    
+    createNotification('general', 'Notifications ' + (notificationsEnabled ? 'Enabled' : 'Disabled'), 
+        `Notifications are now ${notificationsEnabled ? 'on' : 'off'}`, 'low');
+}
+
+function openNotificationSettings() {
+    showModal('⚙️ Notification Settings', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">⚙️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Customize Your Alerts
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">Notification Types:</h3>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" checked style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Medication Reminders</strong>
+                    </label>
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" checked style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Meal Time Alerts</strong>
+                    </label>
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" checked style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Activity Notifications</strong>
+                    </label>
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Staff Announcements</strong>
+                    </label>
+                </div>
+                
+                <h3 style="color: #2e7d32; margin: 20px 0 15px 0;">Alert Methods:</h3>
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" checked style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Visual Pop-ups</strong>
+                    </label>
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" checked style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Audio Alerts</strong>
+                    </label>
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" checked style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Voice Announcements</strong>
+                    </label>
+                    <label style="font-size: 16px; display: flex; align-items: center; margin-bottom: 10px;">
+                        <input type="checkbox" style="margin-right: 10px; transform: scale(1.2);"> 
+                        <strong>Browser Notifications</strong>
+                    </label>
+                </div>
+            </div>
+            
+            <button onclick="saveNotificationSettings()" style="
+                background: #4caf50; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+            ">Save Settings</button>
+        </div>
+    `);
+}
+
+function saveNotificationSettings() {
+    showSuccessFeedback('Notification settings saved!');
+    createNotification('general', 'Settings Saved', 'Your notification preferences have been updated', 'normal');
+}
+
+function clearAllNotifications() {
+    activeNotifications = [];
+    updateNotificationDisplay();
+    showSuccessFeedback('All notifications cleared!');
+}
+
+function markNotificationRead(notificationId) {
+    const notification = activeNotifications.find(n => n.id === notificationId);
+    if (notification) {
+        notification.read = true;
+        updateNotificationDisplay();
+    }
+}
+
+// Additional utility functions for reminders
+function setupMealReminders() {
+    showModal('🍽️ Meal Reminder Setup', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🍽️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Customize Your Meal Alerts
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">Meal Reminder Settings:</h3>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: block; margin-bottom: 8px;"><strong>Reminder Time Before Meal:</strong></label>
+                    <select style="width: 100%; padding: 8px; font-size: 16px; border-radius: 5px; border: 2px solid #ddd;">
+                        <option value="0">At meal time</option>
+                        <option value="15" selected>15 minutes before</option>
+                        <option value="30">30 minutes before</option>
+                        <option value="60">1 hour before</option>
+                    </select>
+                </div>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: block; margin-bottom: 8px;"><strong>Dietary Preferences:</strong></label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 14px;"><input type="checkbox"> Low sodium alerts</label>
+                        <label style="font-size: 14px;"><input type="checkbox"> Diabetic friendly reminders</label>
+                        <label style="font-size: 14px;"><input type="checkbox"> Allergy warnings</label>
+                        <label style="font-size: 14px;"><input type="checkbox"> Hydration reminders</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="saveMealSettings()" style="
+                background: #4caf50; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+            ">Save Settings</button>
+        </div>
+    `);
+}
+
+function setupActivityReminders() {
+    showModal('🎯 Activity Reminder Setup', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">🎯</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Customize Your Activity Alerts
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">Activity Reminder Settings:</h3>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: block; margin-bottom: 8px;"><strong>Reminder Time Before Activity:</strong></label>
+                    <select style="width: 100%; padding: 8px; font-size: 16px; border-radius: 5px; border: 2px solid #ddd;">
+                        <option value="15">15 minutes before</option>
+                        <option value="30" selected>30 minutes before</option>
+                        <option value="60">1 hour before</option>
+                        <option value="120">2 hours before</option>
+                    </select>
+                </div>
+                
+                <div style="margin: 15px 0;">
+                    <label style="font-size: 16px; display: block; margin-bottom: 8px;"><strong>Activity Types to Remind:</strong></label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Physical activities</label>
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Social activities</label>
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Educational activities</label>
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Therapeutic sessions</label>
+                        <label style="font-size: 14px;"><input type="checkbox" checked> Entertainment events</label>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="saveActivitySettings()" style="
+                background: #4caf50; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+            ">Save Settings</button>
+        </div>
+    `);
+}
+
+function saveMedicationSettings() {
+    showSuccessFeedback('Medication reminder settings saved!');
+    createNotification('medication', 'Settings Updated', 'Your medication reminder preferences have been saved', 'normal');
+}
+
+function saveMealSettings() {
+    showSuccessFeedback('Meal reminder settings saved!');
+    createNotification('meal', 'Settings Updated', 'Your meal reminder preferences have been saved', 'normal');
+}
+
+function saveActivitySettings() {
+    showSuccessFeedback('Activity reminder settings saved!');
+    createNotification('activity', 'Settings Updated', 'Your activity reminder preferences have been saved', 'normal');
+}
+
+function testMedicationAlert() {
+    createNotification('medication', 'Test Alert', 'This is a test medication reminder', 'high');
+    showSuccessFeedback('Test alert sent!');
+}
+
+function viewMedicationHistory() {
+    showModal('📊 Medication History', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📊</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Medication History
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">This Week's Adherence:</h3>
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center;">
+                    ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, index) => `
+                        <div style="padding: 10px; border-radius: 8px; background: ${index < 5 ? '#e8f5e8' : '#fff3e0'}; border: 2px solid ${index < 5 ? '#4caf50' : '#ff9800'};">
+                            <strong>${day}</strong><br>
+                            <span style="font-size: 24px;">${index < 5 ? '✅' : '⏰'}</span><br>
+                            <small>${index < 5 ? '100%' : 'Pending'}</small>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <p style="color: #666; font-style: italic;">Detailed history and reports coming soon!</p>
+        </div>
+    `);
+}
+
+function viewDietaryAlerts() {
+    showModal('❤️ Dietary Needs', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">❤️</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Dietary Preferences & Alerts
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Current Dietary Settings:</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; border: 2px solid #4caf50;">
+                        <strong>✅ Low Sodium</strong><br>
+                        <small>Alerts enabled for high-sodium meals</small>
+                    </div>
+                    
+                    <div style="background: #fff8e1; padding: 15px; border-radius: 10px; border: 2px solid #ff9800;">
+                        <strong>⚠️ Diabetic Friendly</strong><br>
+                        <small>Sugar content monitoring active</small>
+                    </div>
+                    
+                    <div style="background: #f3e5f5; padding: 15px; border-radius: 10px; border: 2px solid #9c27b0;">
+                        <strong>🚫 Food Allergies</strong><br>
+                        <small>No known allergies on file</small>
+                    </div>
+                    
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; border: 2px solid #2196f3;">
+                        <strong>💧 Hydration</strong><br>
+                        <small>8 glasses daily target</small>
+                    </div>
+                </div>
+            </div>
+            
+            <button onclick="updateDietarySettings()" style="
+                background: #4caf50; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+            ">Update Settings</button>
+        </div>
+    `);
+}
+
+function managePreferences() {
+    showModal('⭐ Activity Preferences', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">⭐</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Your Activity Preferences
+            </p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0; text-align: left;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Favorite Activities:</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                    ${['Bingo', 'Music Therapy', 'Book Club', 'Movie Night', 'Exercise', 'Arts & Crafts'].map(activity => `
+                        <div style="background: white; padding: 15px; border-radius: 10px; border: 2px solid #ddd; text-align: center;">
+                            <strong>${activity}</strong><br>
+                            <div style="margin-top: 8px;">
+                                ${'⭐'.repeat(Math.floor(Math.random() * 3) + 3)}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            
+            <button onclick="updateActivityPreferences()" style="
+                background: #4caf50; color: white; border: none; padding: 15px 30px;
+                border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+            ">Update Preferences</button>
+        </div>
+    `);
+}
+
+function updateDietarySettings() {
+    showSuccessFeedback('Dietary settings updated!');
+    createNotification('meal', 'Settings Updated', 'Your dietary preferences have been saved', 'normal');
+}
+
+function updateActivityPreferences() {
+    showSuccessFeedback('Activity preferences updated!');
+    createNotification('activity', 'Preferences Saved', 'Your activity preferences have been updated', 'normal');
+}
+
+// Initialize reminder system when page loads
+window.addEventListener('load', function() {
+    // Request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+    
+    // Start the reminder system
+    setTimeout(startReminderSystem, 3000);
+    
+    // Initialize notification display
+    updateNotificationDisplay();
+    
+    // Add some sample notifications for demonstration
+    setTimeout(() => {
+        createNotification('medication', 'Welcome!', 'Medication reminders are now active', 'normal');
+        createNotification('meal', 'Meal Alert', 'Lunch will be served in 30 minutes', 'normal');
+    }, 5000);
+});

@@ -409,6 +409,109 @@
                 </div>
             </div>
         </section>
+
+        <!-- Reminders & Alerts Section -->
+        <section class="reminders-alerts">
+            <div class="reminders-intro">
+                <h2>⏰ Reminders & Alerts</h2>
+                <p><strong>Stay on schedule</strong> - Never miss medications, meals, or activities with smart reminders and gentle alerts.</p>
+            </div>
+            
+            <div class="reminders-categories">
+                <div class="reminder-category medication-reminders">
+                    <div class="category-header">
+                        <div class="category-icon">💊</div>
+                        <div class="category-title">
+                            <h3>Medication Reminders</h3>
+                            <p>Never miss a dose with smart medication alerts</p>
+                        </div>
+                    </div>
+                    <div class="reminder-tools">
+                        <div class="reminder-tool" onclick="showMedicationAlerts()">
+                            <span class="tool-icon">⏰</span>
+                            <p class="tool-name">Active Alerts</p>
+                        </div>
+                        <div class="reminder-tool" onclick="setupMedicationReminders()">
+                            <span class="tool-icon">⚙️</span>
+                            <p class="tool-name">Setup Reminders</p>
+                        </div>
+                        <div class="reminder-tool" onclick="viewMedicationHistory()">
+                            <span class="tool-icon">📅</span>
+                            <p class="tool-name">History</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reminder-category meal-reminders">
+                    <div class="category-header">
+                        <div class="category-icon">🍽️</div>
+                        <div class="category-title">
+                            <h3>Meal Time Alerts</h3>
+                            <p>Stay nourished with timely meal notifications</p>
+                        </div>
+                    </div>
+                    <div class="reminder-tools">
+                        <div class="reminder-tool" onclick="showMealAlerts()">
+                            <span class="tool-icon">🍲</span>
+                            <p class="tool-name">Meal Alerts</p>
+                        </div>
+                        <div class="reminder-tool" onclick="setupMealReminders()">
+                            <span class="tool-icon">🔔</span>
+                            <p class="tool-name">Meal Schedule</p>
+                        </div>
+                        <div class="reminder-tool" onclick="viewDietaryAlerts()">
+                            <span class="tool-icon">❤️</span>
+                            <p class="tool-name">Dietary Needs</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reminder-category activity-reminders">
+                    <div class="category-header">
+                        <div class="category-icon">🎯</div>
+                        <div class="category-title">
+                            <h3>Activity Notifications</h3>
+                            <p>Never miss fun activities and events</p>
+                        </div>
+                    </div>
+                    <div class="reminder-tools">
+                        <div class="reminder-tool" onclick="showActivityAlerts()">
+                            <span class="tool-icon">🎉</span>
+                            <p class="tool-name">Today's Activities</p>
+                        </div>
+                        <div class="reminder-tool" onclick="setupActivityReminders()">
+                            <span class="tool-icon">📅</span>
+                            <p class="tool-name">Activity Schedule</p>
+                        </div>
+                        <div class="reminder-tool" onclick="managePreferences()">
+                            <span class="tool-icon">⭐</span>
+                            <p class="tool-name">Preferences</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="notification-center">
+                <div class="notification-header">
+                    <h3>🔔 Notification Center</h3>
+                    <div class="notification-controls">
+                        <button class="notification-btn" onclick="showAllNotifications()" title="View All Notifications">
+                            <span class="notification-icon">📝</span>
+                            <span class="notification-count" id="notificationCount">3</span>
+                        </button>
+                        <button class="notification-btn" onclick="toggleNotifications()" id="notificationToggle" title="Toggle Notifications">
+                            <span class="notification-icon">🔔</span>
+                        </button>
+                        <button class="notification-btn" onclick="openNotificationSettings()" title="Notification Settings">
+                            <span class="notification-icon">⚙️</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="active-notifications" id="activeNotifications">
+                    <!-- Active notifications will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
     </main>
 
     <footer>
