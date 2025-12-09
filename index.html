@@ -84,6 +84,104 @@
             </div>
         </section>
 
+        <!-- Community Connection Section -->
+        <section class="community-section">
+            <h2>🤝 Connect with Your Neighbors</h2>
+            <div class="community-features">
+                <div class="feature-card social-card">
+                    <h3>🎉 Join Group Activities</h3>
+                    <p>Find friends to join activities with you!</p>
+                    <button class="big-button community-button" onclick="findActivityBuddy()">
+                        Find Activity Partners
+                        <div class="button-hint">Connect with others who share your interests</div>
+                    </button>
+                    <div class="activity-partners" id="activity-partners"></div>
+                </div>
+                
+                <div class="feature-card buddy-card">
+                    <h3>👫 Buddy System</h3>
+                    <p>Get paired with a friendly neighbor for daily chats and activities</p>
+                    <button class="big-button community-button" onclick="showBuddySystem()">
+                        Find My Buddy
+                        <div class="button-hint">Get connected with a companion</div>
+                    </button>
+                    <div class="current-buddy" id="current-buddy"></div>
+                </div>
+                
+                <div class="feature-card social-card">
+                    <h3>💬 Daily Chat Corner</h3>
+                    <p>Share what's on your mind today with the community</p>
+                    <button class="big-button community-button" onclick="openDailyChat()">
+                        Join Today's Chat
+                        <div class="button-hint">Share thoughts and connect with neighbors</div>
+                    </button>
+                    <div class="chat-preview" id="chat-preview"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="community-board-section">
+            <h2>📋 Community Message Board</h2>
+            <div class="board-actions">
+                <button class="big-button board-button" onclick="showCommunityBoard()">
+                    View Message Board
+                    <div class="button-hint">See messages from your neighbors</div>
+                </button>
+                <button class="big-button board-button" onclick="postMessage()">
+                    Post a Message
+                    <div class="button-hint">Share something with the community</div>
+                </button>
+            </div>
+            <div class="recent-messages" id="recent-messages">
+                <h3>Recent Messages:</h3>
+                <div class="message-preview">
+                    <p><strong>Mary (Room 205):</strong> Looking for a bridge partner! 🃏</p>
+                    <p><strong>Robert (Room 118):</strong> Thank you for the birthday wishes! 🎂</p>
+                    <p><strong>Susan (Room 301):</strong> Anyone want to join me for afternoon tea? ☕</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="home-special-activities">
+            <h2>🌟 This Week's Special Adventures</h2>
+            <p class="special-intro">Join these heartwarming weekly activities that bring our community together!</p>
+            
+            <div class="home-special-grid">
+                <div class="home-special-card beach">
+                    <div class="special-icon">🏖️</div>
+                    <h3>Thursday Beach Day</h3>
+                    <p>Feel the ocean breeze and collect shells with friends</p>
+                    <div class="special-time">Every Thursday 10 AM</div>
+                    <button class="big-button special-join-btn" onclick="joinSpecialActivity('Beach Day')">
+                        Join Beach Adventure
+                        <div class="button-hint">Transportation & snacks included!</div>
+                    </button>
+                </div>
+                
+                <div class="home-special-card donation">
+                    <div class="special-icon">💝</div>
+                    <h3>Monday Donation Day</h3>
+                    <p>Share unused items with families in need</p>
+                    <div class="special-time">Every Monday 2 PM</div>
+                    <button class="big-button special-join-btn" onclick="joinSpecialActivity('Donation Day')">
+                        Help Others Give
+                        <div class="button-hint">Feel good about helping others!</div>
+                    </button>
+                </div>
+                
+                <div class="home-special-card pets">
+                    <div class="special-icon">🐾</div>
+                    <h3>Tuesday Pet Adventures</h3>
+                    <p>Visit adorable animals at local pet stores</p>
+                    <div class="special-time">Every Tuesday 1 PM</div>
+                    <button class="big-button special-join-btn" onclick="joinSpecialActivity('Pet Adventures')">
+                        Meet Furry Friends
+                        <div class="button-hint">Therapy animals & gentle companions!</div>
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <section class="quick-links">
             <h2>Quick Links</h2>
             <div class="links-grid">

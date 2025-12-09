@@ -38,6 +38,12 @@
                     <div class="activity-title">🧘 Morning Stretch</div>
                     <div class="activity-location">Main Hall</div>
                     <div class="activity-description">Gentle exercises to start the day</div>
+                    <div class="activity-participants">👥 6 people joined • 4 spots left</div>
+                    <div class="activity-actions">
+                        <button class="join-button" onclick="joinActivity('Morning Stretch')">Join Activity</button>
+                        <button class="find-buddy-btn" onclick="findActivityBuddies('Morning Stretch')">Find Exercise Buddy</button>
+                    </div>
+                    <div class="activity-highlight">🔥 HAPPENING NOW - Join your neighbors!</div>
                 </div>
 
                 <div class="activity-card">
@@ -45,6 +51,11 @@
                     <div class="activity-title">🎨 Arts & Crafts</div>
                     <div class="activity-location">Activity Room</div>
                     <div class="activity-description">Create beautiful decorations</div>
+                    <div class="activity-participants">👥 8 people joined • Share supplies & ideas!</div>
+                    <div class="activity-actions">
+                        <button class="join-button" onclick="joinActivity('Arts & Crafts')">Join Activity</button>
+                        <button class="find-buddy-btn" onclick="findActivityBuddies('Arts & Crafts')">Find Craft Partner</button>
+                    </div>
                 </div>
 
                 <div class="activity-card upcoming">
@@ -52,6 +63,12 @@
                     <div class="activity-title">🎯 Bingo</div>
                     <div class="activity-location">Main Hall</div>
                     <div class="activity-description">Fun prizes to be won!</div>
+                    <div class="activity-participants">👥 12 people joined • Great prizes today!</div>
+                    <div class="activity-actions">
+                        <button class="join-button" onclick="joinActivity('Bingo')">Join Activity</button>
+                        <button class="find-buddy-btn" onclick="findActivityBuddies('Bingo')">Find Bingo Partner</button>
+                    </div>
+                    <div class="activity-highlight">🌟 NEXT UP - Join your neighbors!</div>
                 </div>
 
                 <div class="activity-card">
@@ -59,6 +76,11 @@
                     <div class="activity-title">🎵 Music Time</div>
                     <div class="activity-location">Living Room</div>
                     <div class="activity-description">Sing along to favorite songs</div>
+                    <div class="activity-participants">👥 15 people joined • Requests welcome!</div>
+                    <div class="activity-actions">
+                        <button class="join-button" onclick="joinActivity('Music Time')">Join Activity</button>
+                        <button class="find-buddy-btn" onclick="findActivityBuddies('Music Time')">Find Singing Partner</button>
+                    </div>
                 </div>
 
                 <div class="activity-card">
@@ -66,6 +88,11 @@
                     <div class="activity-title">📺 Movie Night</div>
                     <div class="activity-location">TV Room</div>
                     <div class="activity-description">Classic film with popcorn</div>
+                    <div class="activity-participants">👥 20 people joined • Cozy seating together!</div>
+                    <div class="activity-actions">
+                        <button class="join-button" onclick="joinActivity('Movie Night')">Join Activity</button>
+                        <button class="find-buddy-btn" onclick="findActivityBuddies('Movie Night')">Find Movie Buddy</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -78,6 +105,7 @@
                     <div class="day-activities">
                         <div class="mini-activity">🎲 Game Day</div>
                         <div class="mini-activity">📚 Book Club</div>
+                        <div class="mini-activity special-activity">💝 Donation Day</div>
                     </div>
                 </div>
 
@@ -86,6 +114,7 @@
                     <div class="day-activities">
                         <div class="mini-activity">🌱 Gardening</div>
                         <div class="mini-activity">🎵 Choir Practice</div>
+                        <div class="mini-activity special-activity">🐶 Pet Store Visit</div>
                     </div>
                 </div>
 
@@ -102,6 +131,7 @@
                     <div class="day-activities">
                         <div class="mini-activity">🏃 Exercise Class</div>
                         <div class="mini-activity">🍰 Baking</div>
+                        <div class="mini-activity special-activity">🏖️ Beach Day</div>
                     </div>
                 </div>
 
@@ -118,6 +148,88 @@
                     <div class="day-activities">
                         <div class="mini-activity">👨‍👩‍👧‍👦 Family Visit</div>
                         <div class="mini-activity">🌞 Outdoor Time</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="special-weekly-activities">
+            <h2>🌟 Special Weekly Activities</h2>
+            <p class="section-description">These heartwarming activities happen every week to bring joy, purpose, and connection to our community!</p>
+            
+            <div class="special-activities-grid">
+                <div class="special-activity-card beach-day">
+                    <div class="activity-header">
+                        <div class="activity-icon">🏖️</div>
+                        <h3>Thursday Beach Day</h3>
+                        <div class="activity-badge">Weekly</div>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Every Thursday, we take a magical trip to the beach! Feel the sand between your toes, 
+                            listen to the waves, and enjoy the fresh ocean air with your friends.
+                        </p>
+                        <div class="activity-highlights">
+                            <div class="highlight-item">🚐 Comfortable transport provided</div>
+                            <div class="highlight-item">🪑 Beach chairs and umbrellas available</div>
+                            <div class="highlight-item">🥪 Light snacks and beverages included</div>
+                            <div class="highlight-item">📸 Photo opportunities with friends</div>
+                            <div class="highlight-item">🐚 Shell collecting and gentle walks</div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="join-button" onclick="joinSpecialActivity('Beach Day')">Join Beach Day</button>
+                            <button class="find-buddy-btn" onclick="findBeachBuddy()">Find Beach Buddy</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="special-activity-card donation-day">
+                    <div class="activity-header">
+                        <div class="activity-icon">💝</div>
+                        <h3>Monday Donation Day</h3>
+                        <div class="activity-badge">Weekly</div>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Share the joy of giving! Every Monday, we collect unused items from residents to donate 
+                            to local families in need. It's a wonderful way to declutter and help others.
+                        </p>
+                        <div class="activity-highlights">
+                            <div class="highlight-item">👕 Clothing and accessories</div>
+                            <div class="highlight-item">📚 Books and magazines</div>
+                            <div class="highlight-item">🧸 Toys and games</div>
+                            <div class="highlight-item">🏠 Small household items</div>
+                            <div class="highlight-item">❤️ Feel good about helping others</div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="join-button" onclick="joinSpecialActivity('Donation Day')">Participate in Donations</button>
+                            <button class="find-buddy-btn" onclick="findDonationBuddy()">Find Sorting Partner</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="special-activity-card pet-day">
+                    <div class="activity-header">
+                        <div class="activity-icon">🐾</div>
+                        <h3>Tuesday Pet Adventures</h3>
+                        <div class="activity-badge">Weekly</div>
+                    </div>
+                    <div class="activity-content">
+                        <p class="activity-description">
+                            Visit local pet stores and animal shelters to spend time with adorable cats, dogs, 
+                            rabbits, and other furry friends. Pet therapy brings smiles and reduces stress!
+                        </p>
+                        <div class="activity-highlights">
+                            <div class="highlight-item">🐱 Gentle cats to pet and hold</div>
+                            <div class="highlight-item">🐶 Friendly dogs for companionship</div>
+                            <div class="highlight-item">🐰 Soft rabbits and small animals</div>
+                            <div class="highlight-item">😊 Proven stress relief and joy</div>
+                            <div class="highlight-item">📷 Photos with your new animal friends</div>
+                        </div>
+                        <div class="activity-actions">
+                            <button class="join-button" onclick="joinSpecialActivity('Pet Adventures')">Join Pet Visit</button>
+                            <button class="find-buddy-btn" onclick="findPetBuddy()">Find Animal-Loving Friend</button>
+                        </div>
                     </div>
                 </div>
             </div>
