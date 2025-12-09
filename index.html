@@ -31,17 +31,20 @@
                 <h2>Welcome to Your Home</h2>
                 <p class="hero-text">Stay connected with activities, meals, and important information</p>
                 <div class="quick-actions">
-                    <button class="big-button" onclick="showTime()">
+                    <button class="big-button" onclick="showTime()" title="Click to see the current time in large text">
                         <span class="icon">🕒</span>
                         Current Time
+                        <span class="button-hint">Click to view</span>
                     </button>
-                    <button class="big-button" onclick="showWeather()">
+                    <button class="big-button" onclick="showWeather()" title="Click to see today's weather information">
                         <span class="icon">🌤️</span>
                         Today's Weather
+                        <span class="button-hint">Click to view</span>
                     </button>
-                    <button class="big-button" onclick="window.location.href='activities.html'">
+                    <button class="big-button" onclick="window.location.href='activities.html'" title="Go to the activities page to see what's happening today">
                         <span class="icon">🎯</span>
                         Today's Activities
+                        <span class="button-hint">Click to go</span>
                     </button>
                 </div>
             </div>
@@ -100,6 +103,41 @@
                     <span class="link-icon">📞</span>
                     <span class="link-text">Contact Staff</span>
                 </a>
+            </div>
+        </section>
+
+        <section class="help-section">
+            <div class="help-card">
+                <h2>❓ Need Help Using This Website?</h2>
+                <div class="help-grid">
+                    <div class="help-item">
+                        <div class="help-icon">👆</div>
+                        <h3>How to Click</h3>
+                        <p>Touch or click anywhere on the big colored buttons. They're designed to be easy to press!</p>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-icon">🔍</div>
+                        <h3>Making Text Bigger</h3>
+                        <p>Look for the A+ buttons in the corner of your screen to make text larger and easier to read.</p>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-icon">🚨</div>
+                        <h3>Getting Help</h3>
+                        <p>Press the red Emergency button anytime, or ask any staff member to help you use the website.</p>
+                    </div>
+                    <div class="help-item">
+                        <div class="help-icon">🏠</div>
+                        <h3>Going Back Home</h3>
+                        <p>Click "Home" at the top of any page, or press the back button on your device.</p>
+                    </div>
+                </div>
+                <div class="help-button-container">
+                    <button class="big-button" onclick="showFullHelp()" title="Get detailed help instructions">
+                        <span class="icon">📖</span>
+                        Show Me How to Use This
+                        <span class="button-hint">Step-by-step guide</span>
+                    </button>
+                </div>
             </div>
         </section>
     </main>
