@@ -2063,6 +2063,22 @@ let voiceCommands = {
     'health': () => showHealthTracker(),
     'family': () => showFamilyConnector(),
     'emergency': () => alertStaff(),
+    // Family Communication Voice Commands
+    'video call': () => { speak('Opening video call options'); startVideoCall(); },
+    'call family': () => { speak('Starting family video call'); startVideoCall(); },
+    'call sarah': () => { speak('Calling Sarah'); callFamily('sarah'); },
+    'call michael': () => { speak('Calling Michael'); callFamily('michael'); },
+    'call grandchildren': () => { speak('Calling grandchildren'); callFamily('grandchildren'); },
+    'family chat': () => { speak('Opening family messaging'); openMessaging(); },
+    'send message': () => { speak('Opening family messaging'); openMessaging(); },
+    'group chat': () => { speak('Opening group chat options'); openMessaging(); },
+    'share photos': () => { speak('Opening photo sharing'); sharePhotos(); },
+    'photo sharing': () => { speak('Opening photo sharing options'); sharePhotos(); },
+    'take photo': () => { speak('Opening camera to take a photo'); takeNewPhoto(); },
+    'family contacts': () => { speak('Opening family contact list'); manageContacts(); },
+    'contact list': () => { speak('Opening family contacts'); manageContacts(); },
+    'phone book': () => { speak('Opening family contact list'); manageContacts(); },
+    // Speech Control Commands
     'stop reading': () => stopSpeaking(),
     'pause': () => pauseAllSpeech(),
     'resume': () => resumeSpeaking(),
@@ -3397,6 +3413,399 @@ function updateDietarySettings() {
 function updateActivityPreferences() {
     showSuccessFeedback('Activity preferences updated!');
     createNotification('activity', 'Preferences Saved', 'Your activity preferences have been updated', 'normal');
+}
+
+// Family Connection Functions
+function startVideoCall() {
+    showModal('📹 Video Calls with Family', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📹</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Connect Face-to-Face with Loved Ones
+            </p>
+            
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 20px;">📱 Video Call Options:</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #4caf50; cursor: pointer;" onclick="launchVideoCall('facetime')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">📱</div>
+                        <strong style="color: #2e7d32;">FaceTime</strong><br>
+                        <small style="color: #666;">For iPhone/iPad users</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #2196f3; cursor: pointer;" onclick="launchVideoCall('skype')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">💻</div>
+                        <strong style="color: #1976d2;">Skype</strong><br>
+                        <small style="color: #666;">Works on all devices</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #ff9800; cursor: pointer;" onclick="launchVideoCall('zoom')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">🔗</div>
+                        <strong style="color: #f57c00;">Zoom</strong><br>
+                        <small style="color: #666;">Join with meeting ID</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #4caf50; cursor: pointer;" onclick="launchVideoCall('whatsapp')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">📞</div>
+                        <strong style="color: #2e7d32;">WhatsApp</strong><br>
+                        <small style="color: #666;">Video & voice calls</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">👥 Recent Family Calls:</h3>
+                <div style="text-align: left;">
+                    <div style="padding: 10px; margin: 5px 0; background: #e8f5e8; border-radius: 8px; border: 1px solid #4caf50;">
+                        <strong>Sarah (Daughter)</strong> - Last called: Today 2:30 PM<br>
+                        <button onclick="callFamily('sarah')" style="background: #4caf50; color: white; border: none; padding: 5px 15px; border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 5px;">Call Now</button>
+                    </div>
+                    
+                    <div style="padding: 10px; margin: 5px 0; background: #fff8e1; border-radius: 8px; border: 1px solid #ff9800;">
+                        <strong>Michael (Son)</strong> - Last called: Yesterday 6:15 PM<br>
+                        <button onclick="callFamily('michael')" style="background: #ff9800; color: white; border: none; padding: 5px 15px; border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 5px;">Call Now</button>
+                    </div>
+                    
+                    <div style="padding: 10px; margin: 5px 0; background: #f3e5f5; border-radius: 8px; border: 1px solid #9c27b0;">
+                        <strong>Emma & Lily (Grandchildren)</strong> - Last called: Sunday 4:00 PM<br>
+                        <button onclick="callFamily('grandchildren')" style="background: #9c27b0; color: white; border: none; padding: 5px 15px; border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 5px;">Call Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="scheduleVideoCall()" style="
+                    background: #2196f3; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Schedule Call</button>
+                <button onclick="getVideoCallHelp()" style="
+                    background: #ff9800; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Get Help</button>
+            </div>
+        </div>
+    `);
+}
+
+function openMessaging() {
+    showModal('💬 Family Group Chat', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">💬</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Stay in Touch with Family Messages
+            </p>
+            
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #4caf50;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">📱 Messaging Apps:</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #25d366; cursor: pointer;" onclick="openMessagingApp('whatsapp')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">💚</div>
+                        <strong style="color: #25d366;">WhatsApp</strong><br>
+                        <small style="color: #666;">Most popular worldwide</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #0084ff; cursor: pointer;" onclick="openMessagingApp('messenger')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">🔵</div>
+                        <strong style="color: #0084ff;">Messenger</strong><br>
+                        <small style="color: #666;">Facebook messaging</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #007aff; cursor: pointer;" onclick="openMessagingApp('imessage')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">💙</div>
+                        <strong style="color: #007aff;">iMessage</strong><br>
+                        <small style="color: #666;">For iPhone users</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #ff6b35; cursor: pointer;" onclick="openMessagingApp('telegram')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">✈️</div>
+                        <strong style="color: #ff6b35;">Telegram</strong><br>
+                        <small style="color: #666;">Secure messaging</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">👨‍👩‍👧‍👦 Active Family Groups:</h3>
+                <div style="text-align: left;">
+                    <div style="padding: 15px; margin: 10px 0; background: #e3f2fd; border-radius: 10px; border: 2px solid #2196f3;">
+                        <strong style="color: #1976d2;">📱 Smith Family Chat</strong><br>
+                        <span style="color: #666; font-size: 14px;">8 members • Last message: "Looking forward to Sunday dinner!"</span><br>
+                        <button onclick="openFamilyChat('smith')" style="background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 8px;">Open Chat</button>
+                    </div>
+                    
+                    <div style="padding: 15px; margin: 10px 0; background: #f3e5f5; border-radius: 10px; border: 2px solid #9c27b0;">
+                        <strong style="color: #7b1fa2;">👶 Grandchildren Updates</strong><br>
+                        <span style="color: #666; font-size: 14px;">4 members • Last message: "Emma got an A on her math test!"</span><br>
+                        <button onclick="openFamilyChat('grandchildren')" style="background: #9c27b0; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 8px;">Open Chat</button>
+                    </div>
+                    
+                    <div style="padding: 15px; margin: 10px 0; background: #fff8e1; border-radius: 10px; border: 2px solid #ff9800;">
+                        <strong style="color: #f57c00;">🏡 Group Home Friends</strong><br>
+                        <span style="color: #666; font-size: 14px;">12 members • Last message: "Movie night tonight at 7 PM!"</span><br>
+                        <button onclick="openFamilyChat('friends')" style="background: #ff9800; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer; margin-top: 8px;">Open Chat</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="createNewGroup()" style="
+                    background: #4caf50; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Create Group</button>
+                <button onclick="getMessagingHelp()" style="
+                    background: #ff9800; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Get Help</button>
+            </div>
+        </div>
+    `);
+}
+
+function sharePhotos() {
+    showModal('📸 Photo Sharing with Family', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">📸</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Share Special Moments with Loved Ones
+            </p>
+            
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 20px;">📷 Photo Sharing Options:</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin: 20px 0;">
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #4285f4; cursor: pointer;" onclick="openPhotoApp('photos')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">📱</div>
+                        <strong style="color: #4285f4;">Google Photos</strong><br>
+                        <small style="color: #666;">Easy sharing & backup</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #1877f2; cursor: pointer;" onclick="openPhotoApp('facebook')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">📘</div>
+                        <strong style="color: #1877f2;">Facebook</strong><br>
+                        <small style="color: #666;">Share with friends</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #25d366; cursor: pointer;" onclick="openPhotoApp('whatsapp')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">💚</div>
+                        <strong style="color: #25d366;">WhatsApp</strong><br>
+                        <small style="color: #666;">Send to groups</small>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #007aff; cursor: pointer;" onclick="openPhotoApp('icloud')">
+                        <div style="font-size: 36px; margin-bottom: 10px;">☁️</div>
+                        <strong style="color: #007aff;">iCloud</strong><br>
+                        <small style="color: #666;">iPhone sharing</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #fff8e1; padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px solid #ff9800;">
+                <h3 style="color: #f57c00; margin-bottom: 15px;">📚 Recent Photo Albums:</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; text-align: left;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🎂</div>
+                        <strong>Birthday Celebration</strong><br>
+                        <span style="color: #666; font-size: 14px;">23 photos • Shared with 6 family members</span><br>
+                        <button onclick="viewAlbum('birthday')" style="background: #4caf50; color: white; border: none; padding: 5px 12px; border-radius: 12px; font-size: 12px; cursor: pointer; margin-top: 8px;">View Album</button>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; text-align: left;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🌸</div>
+                        <strong>Garden Photos</strong><br>
+                        <span style="color: #666; font-size: 14px;">15 photos • Shared yesterday</span><br>
+                        <button onclick="viewAlbum('garden')" style="background: #4caf50; color: white; border: none; padding: 5px 12px; border-radius: 12px; font-size: 12px; cursor: pointer; margin-top: 8px;">View Album</button>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; text-align: left;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🎨</div>
+                        <strong>Art Class Creations</strong><br>
+                        <span style="color: #666; font-size: 14px;">12 photos • From last week</span><br>
+                        <button onclick="viewAlbum('art')" style="background: #4caf50; color: white; border: none; padding: 5px 12px; border-radius: 12px; font-size: 12px; cursor: pointer; margin-top: 8px;">View Album</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">📸 Quick Actions:</h3>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="takeNewPhoto()" style="background: #4caf50; color: white; border: none; padding: 12px 25px; border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;">📷 Take Photo</button>
+                    <button onclick="uploadFromDevice()" style="background: #2196f3; color: white; border: none; padding: 12px 25px; border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;">📁 Upload Photos</button>
+                    <button onclick="createPhotoAlbum()" style="background: #9c27b0; color: white; border: none; padding: 12px 25px; border-radius: 20px; font-size: 16px; cursor: pointer; font-weight: bold;">📚 Create Album</button>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="getPhotoSharingHelp()" style="
+                    background: #ff9800; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Get Help</button>
+            </div>
+        </div>
+    `);
+}
+
+function manageContacts() {
+    showModal('👥 Family Contacts', `
+        <div style="text-align: center;">
+            <div style="font-size: 48px; margin: 20px 0;">👥</div>
+            <p style="font-size: 24px; color: #2c3e50; margin: 20px 0;">
+                Manage Your Family Contact List
+            </p>
+            
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #4caf50;">
+                <h3 style="color: #2e7d32; margin-bottom: 20px;">👨‍👩‍👧‍👦 Family Members:</h3>
+                
+                <div style="text-align: left;">
+                    <div style="background: white; padding: 15px; margin: 10px 0; border-radius: 10px; border: 2px solid #2196f3; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 24px; display: inline;">👩</div>
+                            <strong style="font-size: 18px; margin-left: 10px;">Sarah Johnson (Daughter)</strong><br>
+                            <span style="color: #666; font-size: 14px; margin-left: 34px;">📞 (555) 123-4567 • 📧 sarah.johnson@email.com</span><br>
+                            <span style="color: #666; font-size: 14px; margin-left: 34px;">Lives in: Springfield, IL • Birthday: March 15th</span>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-direction: column;">
+                            <button onclick="quickCall('sarah')" style="background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer;">📞 Call</button>
+                            <button onclick="quickMessage('sarah')" style="background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer;">💬 Message</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; margin: 10px 0; border-radius: 10px; border: 2px solid #ff9800; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 24px; display: inline;">👨</div>
+                            <strong style="font-size: 18px; margin-left: 10px;">Michael Johnson (Son)</strong><br>
+                            <span style="color: #666; font-size: 14px; margin-left: 34px;">📞 (555) 987-6543 • 📧 mike.j.work@email.com</span><br>
+                            <span style="color: #666; font-size: 14px; margin-left: 34px;">Lives in: Chicago, IL • Birthday: July 22nd</span>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-direction: column;">
+                            <button onclick="quickCall('michael')" style="background: #4caf50; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer;">📞 Call</button>
+                            <button onclick="quickMessage('michael')" style="background: #2196f3; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer;">💬 Message</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 15px; margin: 10px 0; border-radius: 10px; border: 2px solid #9c27b0; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 24px; display: inline;">👧👶</div>
+                            <strong style="font-size: 18px; margin-left: 10px;">Emma & Lily (Grandchildren)</strong><br>
+                            <span style="color: #666; font-size: 14px; margin-left: 44px;">Parents: Sarah & Tom • Ages: 8 and 5</span><br>
+                            <span style="color: #666; font-size: 14px; margin-left: 44px;">Contact through Sarah • Love video calls!</span>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-direction: column;">
+                            <button onclick="videoCallGrandchildren()" style="background: #9c27b0; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer;">📹 Video Call</button>
+                            <button onclick="sendGrandchildrenCard()" style="background: #ff9800; color: white; border: none; padding: 8px 15px; border-radius: 15px; font-size: 14px; cursor: pointer;">💌 Send Card</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #fff8e1; padding: 20px; border-radius: 15px; margin: 20px 0;">
+                <h3 style="color: #f57c00; margin-bottom: 15px;">🚨 Emergency Contacts:</h3>
+                <div style="text-align: left;">
+                    <div style="background: #ffebee; padding: 12px; margin: 8px 0; border-radius: 8px; border: 2px solid #f44336;">
+                        <strong style="color: #d32f2f;">🚑 Emergency Services: 911</strong><br>
+                        <span style="color: #666; font-size: 14px;">For immediate medical emergencies</span>
+                    </div>
+                    <div style="background: #e8f5e8; padding: 12px; margin: 8px 0; border-radius: 8px; border: 2px solid #4caf50;">
+                        <strong style="color: #2e7d32;">👩‍⚕️ Group Home Nurse: (555) 246-8101</strong><br>
+                        <span style="color: #666; font-size: 14px;">Available 24/7 for health concerns</span>
+                    </div>
+                    <div style="background: #e3f2fd; padding: 12px; margin: 8px 0; border-radius: 8px; border: 2px solid #2196f3;">
+                        <strong style="color: #1976d2;">🏠 Front Desk: (555) 246-8100</strong><br>
+                        <span style="color: #666; font-size: 14px;">General assistance and information</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="addNewContact()" style="
+                    background: #4caf50; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Add Contact</button>
+                <button onclick="getContactHelp()" style="
+                    background: #ff9800; color: white; border: none; padding: 15px 30px;
+                    border-radius: 25px; font-size: 18px; cursor: pointer; font-weight: bold;
+                ">Get Help</button>
+            </div>
+        </div>
+    `);
+}
+
+// Helper functions for family communication features
+function launchVideoCall(platform) {
+    showSuccessFeedback(`Opening ${platform} for video call - staff will help you connect!`);
+}
+
+function callFamily(person) {
+    showSuccessFeedback(`Calling ${person} - connecting now!`);
+}
+
+function openMessagingApp(app) {
+    showSuccessFeedback(`Opening ${app} messaging - staff will help you send messages!`);
+}
+
+function openFamilyChat(group) {
+    showSuccessFeedback(`Opening ${group} chat - loading your messages!`);
+}
+
+function createNewGroup() {
+    showSuccessFeedback('Creating new group chat - staff will help you add family members!');
+}
+
+function getMessagingHelp() {
+    showSuccessFeedback('Getting messaging help - staff will teach you how to use family chat!');
+}
+
+function openPhotoApp(app) {
+    showSuccessFeedback(`Opening ${app} for photo sharing - staff will help you share pictures!`);
+}
+
+function viewAlbum(album) {
+    showSuccessFeedback(`Opening ${album} album - loading your photos!`);
+}
+
+function takeNewPhoto() {
+    showSuccessFeedback('Opening camera to take a new photo - smile!');
+}
+
+function uploadFromDevice() {
+    showSuccessFeedback('Opening photo library - staff will help you select photos to share!');
+}
+
+function createPhotoAlbum() {
+    showSuccessFeedback('Creating new photo album - staff will help you organize your pictures!');
+}
+
+function getPhotoSharingHelp() {
+    showSuccessFeedback('Getting photo sharing help - staff will show you how to share with family!');
+}
+
+function quickCall(person) {
+    showSuccessFeedback(`Calling ${person} now - connecting...`);
+}
+
+function quickMessage(person) {
+    showSuccessFeedback(`Opening message to ${person} - staff will help you type your message!`);
+}
+
+function videoCallGrandchildren() {
+    showSuccessFeedback('Starting video call with grandchildren - they will be so excited to see you!');
+}
+
+function sendGrandchildrenCard() {
+    showSuccessFeedback('Creating digital card for grandchildren - staff will help you personalize it!');
+}
+
+function addNewContact() {
+    showSuccessFeedback('Adding new family contact - staff will help you enter their information!');
+}
+
+function getContactHelp() {
+    showSuccessFeedback('Getting contact management help - staff will show you how to organize your family list!');
+}
+
+function getVideoCallHelp() {
+    showSuccessFeedback('Getting video call help - staff will teach you how to use video calling features!');
 }
 
 // Initialize reminder system when page loads
