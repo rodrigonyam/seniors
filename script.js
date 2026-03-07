@@ -3741,6 +3741,36 @@ function callFamily(person) {
 }
 
 function openMessagingApp(app) {
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if (app === 'whatsapp') {
+        // Try to open the native WhatsApp app first; fall back to web.
+        const deepLink = 'whatsapp://send';
+        const webLink = 'https://web.whatsapp.com/';
+        const universalLink = 'https://wa.me/';
+
+        // Attempt deep link; on browsers that block it, open the web link.
+        const opener = () => {
+            const newWin = window.open(deepLink, '_blank');
+            // If the browser blocked or failed to open the deep link, fall back.
+            setTimeout(() => {
+                if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+                    window.open(isMobile ? universalLink : webLink, '_blank');
+                }
+            }, 800);
+        };
+
+        opener();
+        showSuccessFeedback('Opening WhatsApp… if the app does not open, check pop-up blockers or use WhatsApp Web.');
+        return;
+    }
+
+    if (app === 'messenger') {
+        window.open('https://m.me/', '_blank');
+    } else if (app === 'imessage') {
+        showSuccessFeedback('Open Messages on your iPhone/iPad to continue.');
+    } else if (app === 'telegram') {
+        window.open(isMobile ? 'tg://msg' : 'https://web.telegram.org/', '_blank');
+    }
     showSuccessFeedback(`Opening ${app} messaging - staff will help you send messages!`);
 }
 
