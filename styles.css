@@ -52,8 +52,10 @@ header {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 25px;
+    gap: 12px;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .nav-menu li a {
@@ -3554,4 +3556,12 @@ a:focus {
 .simple-card p {
     color: #546e7a;
     margin-bottom: 16px;
+}
+
+.dashboard.minimal {
+    margin-top: 20px;
+}
+
+.dashboard-grid.three-up {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }

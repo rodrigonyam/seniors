@@ -100,8 +100,8 @@ function Home() {
           </div>
         </section>
 
-        <section className="dashboard">
-          <div className="dashboard-grid">
+        <section className="dashboard minimal">
+          <div className="dashboard-grid three-up">
             <div className="card">
               <h3>🍽️ Next Meal</h3>
               <div className="info-display">
@@ -111,45 +111,27 @@ function Home() {
             </div>
 
             <div className="card">
-              <h3>📅 Today's Date</h3>
+              <h3>📅 Today</h3>
               <div className="info-display">
                 <p className="date-display">{dateDisplay}</p>
               </div>
             </div>
 
             <div className="card">
-              <h3>🎪 Upcoming Activity</h3>
+              <h3>📢 Notice</h3>
               <div className="info-display">
-                <p className="activity-time">2:00 PM</p>
-                <p className="activity-name">Bingo in the Main Hall</p>
-              </div>
-            </div>
-
-            <div className="card">
-              <h3>📢 Important Notice</h3>
-              <div className="info-display">
-                <p className="notice-text">Family visiting hours: 2-5 PM daily</p>
+                <p className="notice-text">Visiting hours: 2-5 PM daily</p>
               </div>
             </div>
           </div>
         </section>
-        <section className="quick-links">
-          <h2>Quick Links</h2>
-          <div className="links-grid">
-            <a href="activities.html" className="link-card"><span className="link-icon">🎮</span><span className="link-text">Activities & Games</span></a>
-            <a href="meals.html" className="link-card"><span className="link-icon">🍽️</span><span className="link-text">Meal Schedule</span></a>
-            <a href="news.html" className="link-card"><span className="link-icon">📰</span><span className="link-text">News & Updates</span></a>
-            <a href="contact.html" className="link-card"><span className="link-icon">📞</span><span className="link-text">Contact Staff</span></a>
-          </div>
-        </section>
-
         <section className="essentials">
           <h2>Stay Connected</h2>
           <div className="simple-grid">
             <div className="simple-card">
               <h3>💬 Family Messages</h3>
               <p>Open WhatsApp, Messenger, or text to reach loved ones.</p>
-              <button className="big-button" onClick={showWeather} title="Open messaging apps">
+              <button className="big-button" onClick={() => setModal({ title: 'Messaging', body: <p>Use your preferred messaging app to reach family.</p> })} title="Open messaging apps">
                 <span className="icon">📱</span>
                 Open Messaging
               </button>
@@ -168,25 +150,6 @@ function Home() {
               <button className="big-button" onClick={showTime} title="View quick help">
                 <span className="icon">📖</span>
                 Quick Help
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section className="help-section">
-          <div className="help-card">
-            <h2>❓ Need Help Using This Website?</h2>
-            <div className="help-grid">
-              <div className="help-item"><div className="help-icon">👆</div><h3>How to Click</h3><p>Touch or click anywhere on the big colored buttons. They're designed to be easy to press!</p></div>
-              <div className="help-item"><div className="help-icon">🔍</div><h3>Making Text Bigger</h3><p>Look for the A+ buttons in the corner of your screen to make text larger and easier to read.</p></div>
-              <div className="help-item"><div className="help-icon">🚨</div><h3>Getting Help</h3><p>Press the red Emergency button anytime, or ask any staff member to help you use the website.</p></div>
-              <div className="help-item"><div className="help-icon">🏠</div><h3>Going Back Home</h3><p>Click "Home" at the top of any page, or press the back button on your device.</p></div>
-            </div>
-            <div className="help-button-container">
-              <button className="big-button" title="Get detailed help instructions">
-                <span className="icon">📖</span>
-                Show Me How to Use This
-                <span className="button-hint">Step-by-step guide</span>
               </button>
             </div>
           </div>
