@@ -86,15 +86,15 @@ function Home() {
                 Current Time
                 <span className="button-hint">Click to view</span>
               </button>
-              <button className="big-button" onClick={showWeather} title="Click to see today's weather information">
-                <span className="icon">🌤️</span>
-                Today's Weather
-                <span className="button-hint">Click to view</span>
-              </button>
               <button className="big-button" onClick={() => (window.location.href = 'activities.html')} title="Go to the activities page to see what's happening today">
                 <span className="icon">🎯</span>
                 Today's Activities
                 <span className="button-hint">Click to go</span>
+              </button>
+              <button className="big-button" onClick={() => (window.location.href = 'emergency.html')} title="Open emergency info">
+                <span className="icon">🚨</span>
+                Emergency Info
+                <span className="button-hint">Quick help</span>
               </button>
             </div>
           </div>
@@ -133,147 +133,6 @@ function Home() {
             </div>
           </div>
         </section>
-
-        {/* Practical Support Section */}
-        <section className="practical-support-section">
-          <h2>🛠️ Daily Life Support</h2>
-          <p className="support-intro">Get help with your daily routines, health monitoring, and staying connected!</p>
-
-          <div className="support-categories">
-            <div className="support-category daily-routines">
-              <div className="category-header">
-                <div className="category-icon">📋</div>
-                <h3>Daily Routines</h3>
-              </div>
-              <div className="support-tools">
-                <button className="support-btn">💊 Medication Reminder<div className="tool-hint">Never miss your medications</div></button>
-                <button className="support-btn">🕐 Daily Schedule<div className="tool-hint">See your personal daily plan</div></button>
-                <button className="support-btn">🍽️ Meal Planning<div className="tool-hint">Plan meals and dietary needs</div></button>
-              </div>
-            </div>
-
-            <div className="support-category health-monitoring">
-              <div className="category-header">
-                <div className="category-icon">🏥</div>
-                <h3>Health Support</h3>
-              </div>
-              <div className="support-tools">
-                <button className="support-btn">📊 Health Tracker<div className="tool-hint">Monitor your daily wellness</div></button>
-                <button className="support-btn">📅 Appointment Reminders<div className="tool-hint">Never miss doctor visits</div></button>
-                <button className="support-btn">🩺 Symptom Logger<div className="tool-hint">Track how you're feeling</div></button>
-              </div>
-            </div>
-
-            <div className="support-category communication">
-              <div className="category-header">
-                <div className="category-icon">📞</div>
-                <h3>Communication Help</h3>
-              </div>
-              <div className="support-tools">
-                <button className="support-btn">👨‍👩‍👧‍👦 Family Contacts<div className="tool-hint">Easy family communication</div></button>
-                <button className="support-btn">🎤 Voice Messages<div className="tool-hint">Send and receive audio messages</div></button>
-                <button className="support-btn">📹 Video Call Helper<div className="tool-hint">Simple video calls with family</div></button>
-              </div>
-            </div>
-
-            <div className="support-category family-connection">
-              <div className="category-header">
-                <div className="category-icon">👨‍👩‍👧‍👦</div>
-                <h3>Family Activities</h3>
-              </div>
-              <div className="support-tools">
-                <button className="support-btn">📹 Video Calls<div className="tool-hint">Face-to-face calls with loved ones</div></button>
-                <button className="support-btn">💬 Group Chat<div className="tool-hint">WhatsApp, Messenger & more</div></button>
-                <button className="support-btn">📸 Photo Sharing<div className="tool-hint">Share special moments</div></button>
-                <button className="support-btn">📞 Family Contacts<div className="tool-hint">Manage your family list</div></button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Community Connection Section */}
-        <section className="community-section">
-          <h2>🤝 Connect with Your Neighbors</h2>
-          <div className="community-features">
-            <div className="feature-card social-card">
-              <h3>🎉 Join Group Activities</h3>
-              <p>Find friends to join activities with you!</p>
-              <button className="big-button community-button">
-                Find Activity Partners
-                <div className="button-hint">Connect with others who share your interests</div>
-              </button>
-              <div className="activity-partners" id="activity-partners"></div>
-            </div>
-
-            <div className="feature-card buddy-card">
-              <h3>👫 Buddy System</h3>
-              <p>Get paired with a friendly neighbor for daily chats and activities</p>
-              <button className="big-button community-button">
-                Find My Buddy
-                <div className="button-hint">Get connected with a companion</div>
-              </button>
-              <div className="current-buddy" id="current-buddy"></div>
-            </div>
-
-            <div className="feature-card social-card">
-              <h3>💬 Daily Chat Corner</h3>
-              <p>Share what's on your mind today with the community</p>
-              <button className="big-button community-button">
-                Join Today's Chat
-                <div className="button-hint">Share thoughts and connect with neighbors</div>
-              </button>
-              <div className="chat-preview" id="chat-preview"></div>
-            </div>
-          </div>
-        </section>
-
-        <section className="community-board-section">
-          <h2>📋 Community Message Board</h2>
-          <div className="board-actions">
-            <button className="big-button board-button">View Message Board<div className="button-hint">See messages from your neighbors</div></button>
-            <button className="big-button board-button">Post a Message<div className="button-hint">Share something with the community</div></button>
-          </div>
-          <div className="recent-messages" id="recent-messages">
-            <h3>Recent Messages:</h3>
-            <div className="message-preview">
-              <p><strong>Mary (Room 205):</strong> Looking for a bridge partner! 🃏</p>
-              <p><strong>Robert (Room 118):</strong> Thank you for the birthday wishes! 🎂</p>
-              <p><strong>Susan (Room 301):</strong> Anyone want to join me for afternoon tea? ☕</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="home-special-activities">
-          <h2>🌟 This Week's Special Adventures</h2>
-          <p className="special-intro">Join these heartwarming weekly activities that bring our community together!</p>
-
-          <div className="home-special-grid">
-            <div className="home-special-card beach">
-              <div className="special-icon">🏖️</div>
-              <h3>Thursday Beach Day</h3>
-              <p>Feel the ocean breeze and collect shells with friends</p>
-              <div className="special-time">Every Thursday 10 AM</div>
-              <button className="big-button special-join-btn">Join Beach Adventure<div className="button-hint">Transportation & snacks included!</div></button>
-            </div>
-
-            <div className="home-special-card donation">
-              <div className="special-icon">💝</div>
-              <h3>Monday Donation Day</h3>
-              <p>Share unused items with families in need</p>
-              <div className="special-time">Every Monday 2 PM</div>
-              <button className="big-button special-join-btn">Help Others Give<div className="button-hint">Feel good about helping others!</div></button>
-            </div>
-
-            <div className="home-special-card pets">
-              <div className="special-icon">🐾</div>
-              <h3>Tuesday Pet Adventures</h3>
-              <p>Visit adorable animals at local pet stores</p>
-              <div className="special-time">Every Tuesday 1 PM</div>
-              <button className="big-button special-join-btn">Meet Furry Friends<div className="button-hint">Therapy animals & gentle companions!</div></button>
-            </div>
-          </div>
-        </section>
-
         <section className="quick-links">
           <h2>Quick Links</h2>
           <div className="links-grid">
@@ -281,6 +140,36 @@ function Home() {
             <a href="meals.html" className="link-card"><span className="link-icon">🍽️</span><span className="link-text">Meal Schedule</span></a>
             <a href="news.html" className="link-card"><span className="link-icon">📰</span><span className="link-text">News & Updates</span></a>
             <a href="contact.html" className="link-card"><span className="link-icon">📞</span><span className="link-text">Contact Staff</span></a>
+          </div>
+        </section>
+
+        <section className="essentials">
+          <h2>Stay Connected</h2>
+          <div className="simple-grid">
+            <div className="simple-card">
+              <h3>💬 Family Messages</h3>
+              <p>Open WhatsApp, Messenger, or text to reach loved ones.</p>
+              <button className="big-button" onClick={showWeather} title="Open messaging apps">
+                <span className="icon">📱</span>
+                Open Messaging
+              </button>
+            </div>
+            <div className="simple-card">
+              <h3>📞 Call Staff</h3>
+              <p>Need help right now? Call the front desk and we’ll assist.</p>
+              <button className="big-button" onClick={() => (window.location.href = 'tel:911')} title="Call staff">
+                <span className="icon">☎️</span>
+                Call for Help
+              </button>
+            </div>
+            <div className="simple-card">
+              <h3>❓ Need Assistance</h3>
+              <p>Short guide on using the site and making text larger.</p>
+              <button className="big-button" onClick={showTime} title="View quick help">
+                <span className="icon">📖</span>
+                Quick Help
+              </button>
+            </div>
           </div>
         </section>
 
