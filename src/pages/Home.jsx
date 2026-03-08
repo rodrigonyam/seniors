@@ -86,21 +86,21 @@ function Home() {
                 Current Time
                 <span className="button-hint">Click to view</span>
               </button>
-              <button className="big-button" onClick={() => (window.location.href = 'activities.html')} title="Go to the activities page to see what's happening today">
-                <span className="icon">🎯</span>
-                Today's Activities
-                <span className="button-hint">Click to go</span>
+              <button className="big-button" onClick={() => document.getElementById('summary-strip')?.scrollIntoView({ behavior: 'smooth' })} title="Jump to today's summary">
+                <span className="icon">📅</span>
+                Today's Summary
+                <span className="button-hint">See meals, date, notice</span>
               </button>
-              <button className="big-button" onClick={() => (window.location.href = 'emergency.html')} title="Open emergency info">
-                <span className="icon">🚨</span>
-                Emergency Info
-                <span className="button-hint">Quick help</span>
+              <button className="big-button" onClick={() => (window.location.href = 'tel:911')} title="Call staff">
+                <span className="icon">📞</span>
+                Call Staff
+                <span className="button-hint">We will help</span>
               </button>
             </div>
           </div>
         </section>
 
-        <section className="dashboard minimal">
+        <section className="dashboard minimal" id="summary-strip">
           <div className="dashboard-grid three-up">
             <div className="card">
               <h3>🍽️ Next Meal</h3>
