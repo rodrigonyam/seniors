@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Modal from '../shared/Modal.jsx';
+import NavBar from '../shared/NavBar.jsx';
 
 function useDateInfo() {
   const [now, setNow] = useState(() => new Date());
@@ -58,22 +59,7 @@ function Home() {
 
   return (
     <>
-      <header>
-        <nav className="main-nav">
-          <div className="logo">
-            <h1>🏠 Sunshine Group Home</h1>
-          </div>
-          <ul className="nav-menu">
-            <li><a href="index.html" className="active">Home</a></li>
-            <li><a href="activities.html">Activities</a></li>
-            <li><a href="meals.html">Meals</a></li>
-            <li><a href="news.html">News</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="emergency.html" className="emergency-btn">Emergency</a></li>
-          </ul>
-          <button className="menu-toggle" aria-label="Toggle menu">☰</button>
-        </nav>
-      </header>
+      <NavBar activePage="Home" />
 
       <main>
         <section className="hero">
@@ -90,11 +76,6 @@ function Home() {
                 <span className="icon">📅</span>
                 Today's Summary
                 <span className="button-hint">See meals, date, notice</span>
-              </button>
-              <button className="big-button" onClick={() => (window.location.href = 'tel:911')} title="Call staff">
-                <span className="icon">📞</span>
-                Call Staff
-                <span className="button-hint">We will help</span>
               </button>
             </div>
           </div>

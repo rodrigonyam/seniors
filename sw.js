@@ -14,9 +14,9 @@ const CRITICAL_FILES = [
     // Core pages
     '/activities.html',
     '/meals.html',
-    '/schedule.html',
-    '/community.html',
-    '/games.html'
+    '/news.html',
+    '/contact.html',
+    '/emergency.html'
 ];
 
 // Assets that enhance offline experience but aren't critical

@@ -12,7 +12,6 @@ function initializeWebsite() {
     createAccessibilityControls();
     addEmergencyHelpButton();
     addButtonFeedback();
-    addSimplifiedNavigation();
     announcePageLoad();
     showWelcomeMessage();
 }
